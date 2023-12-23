@@ -16,7 +16,8 @@ int main(){
 
     vector<int> numbers;
     vector<int> zone_numbers;
-    vector<int> missing_numbers;
+    vector<int> available_zone_numbers;
+    vector<int> missing_row_numbers;
 
     print_puzzle_row(sudoku, 0);
     print_puzzle(sudoku);
@@ -27,7 +28,9 @@ int main(){
     int zone = get_zone(grid.x, grid.y);
     store_zone(sudoku, zone_numbers, zone);
     print_vector_zone(zone_numbers, zone);
-    missing_numbers = get_missing_zone_numbers(sudoku, zone_numbers, zone);
+    // available_zone_numbers = get_available_zone_numbers(sudoku, zone_numbers, zone);
+    get_missing_numbers(zone_numbers);
+    // missing_row_numbers = get_missing_row_numbers(sudoku, grid.y);
 
     return EXIT_SUCCESS;
 

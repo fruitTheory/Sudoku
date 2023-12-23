@@ -3,6 +3,7 @@
 #include "config.hpp"
 #include <iostream>
 #include <vector>
+#include <algorithm>
 using std::vector;
 
 class Sudoku{
@@ -39,24 +40,46 @@ void puzzle_to_vector(Sudoku &sudoku, vector<int> &numbers){
         numbers.push_back(sudoku.puzzle[0][x]);
     }
 }
-
-vector<int> get_missing_zone_numbers(Sudoku &sudoku, vector<int> &zone_numbers, int zone){
-    vector<int> available_numbers;
-    vector<int> missing_numbers;
-    std::cout << "Available: ";
-    for(int x = 0; x < (int)zone_numbers.size(); x++){
-        if(zone_numbers[x] != 0){ std::cout << zone_numbers[x] << " "; available_numbers.push_back(x); }
-    } newline;
-
-
-
-    return missing_numbers;
-}
-
 // Provide Column-y and Row-x to update puzzle with a number
 void add_number(Sudoku &sudoku, int y, int x, int number){
     sudoku.puzzle[y][x] = number;
 }
+
+// Finds missing numbers from any 'available numbers' input and returns a vector missing numbers
+vector<int> get_missing_numbers(vector<int> available_numbers){
+    
+    // need 1 2 3 4 5 6 7 8 9
+    // Available: 9 4 2 5 7 6
+    // Missing: 1 3 8
+    vector<int> missing_numbers;
+    vector<int> available_sorted;
+
+    // Manual sort - probably better to use std lib
+    for(int y = 1; y <= 9; y++){
+        for(int x = 0; x < 9; x++){
+            if(y == available_numbers[x]){ std::cout << y << " "; available_sorted.push_back(y); continue;}
+        } 
+    } newline;
+
+    std::cout << "Missing: ";
+
+    // If binary search for any number between 1-9 is not found store it as missing
+    for(int y = 1; y <= 9; y++){
+        if(!std::binary_search(available_sorted.begin(), available_sorted.end(), y)){
+            std::cout << y << " ";
+
+        };
+    } newline;
+
+    return missing_numbers;
+
+}
+
+// Check which column as least missing numbers, return the column number
+void compare_columns(Sudoku &sudoku);
+// Check which row as least missing numbers, return the row number
+void compare_rows(Sudoku &sudoku);
+
 
 /*
 

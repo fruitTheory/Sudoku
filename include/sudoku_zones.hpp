@@ -25,7 +25,7 @@ int get_zone(int y, int x){
     else { return -1; }
 }
 
-// Takes zone and returns that zones numbers to a vector
+// Takes zone and store into provided vector array
 void store_zone(Sudoku &sudoku, std::vector<int> &zone_numbers, int zone){
     switch (zone)
     {
