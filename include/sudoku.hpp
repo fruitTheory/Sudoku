@@ -54,10 +54,16 @@ vector<int> get_missing_numbers(vector<int> available_numbers){
     vector<int> missing_numbers;
     vector<int> available_sorted;
 
-    // Manual sort - probably better to use std lib
+    std::cout << "Available: ";
+
+    // Manual sort - probably better to use std lib - this uses a compare method
     for(int y = 1; y <= 9; y++){
         for(int x = 0; x < 9; x++){
-            if(y == available_numbers[x]){ std::cout << y << " "; available_sorted.push_back(y); continue;}
+            if(y == available_numbers[x]){ 
+                std::cout << y << " "; 
+                available_sorted.push_back(y); 
+                continue;
+            }
         } 
     } newline;
 
