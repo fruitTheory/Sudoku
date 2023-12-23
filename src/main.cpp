@@ -7,23 +7,23 @@ using namespace std;
 
 int main(){
 
-    puts("Hello World!");
-
     Sudoku sudoku;
-    vector<int> numbers;
     Grid grid;
-    grid.x = 0; grid.y = 4;
+    grid.x = 0; grid.y = 2;
+
+    vector<int> numbers;
+    vector<int> zone_numbers;
 
     print_puzzle_row(sudoku, 0);
     print_puzzle(sudoku);
-    add_number(sudoku, grid.x, grid.y, 6);
+    // add_number(sudoku, grid.x, grid.y, 6);
     puzzle_to_vector(sudoku, numbers);
-    print_puzzle(sudoku);
     print_vector(numbers);
 
     int zone = get_zone(grid.x, grid.y);
-    std::cout << "Zone: " << zone << std::endl;
-
+    //std::cout << "Zone: " << zone << std::endl;
+    store_zone(sudoku, zone_numbers, zone);
+    print_vector_zone(zone_numbers, zone);
 
     return EXIT_SUCCESS;
 
