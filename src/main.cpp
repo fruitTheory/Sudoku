@@ -1,7 +1,8 @@
-#include <stdlib.h>
+#include <cstdlib>
 #include <iostream>
 #include <vector>
 #include "sudoku.hpp"
+#include "sudoku_utility.hpp"
 using namespace std;
 
 int main(){
@@ -11,14 +12,17 @@ int main(){
     Sudoku sudoku;
     vector<int> numbers;
     Grid grid;
-    grid.x = 0; grid.y = 1;
+    grid.x = 0; grid.y = 4;
 
     print_puzzle_row(sudoku, 0);
     print_puzzle(sudoku);
-    store_puzzle(sudoku, numbers);
     add_number(sudoku, grid.x, grid.y, 6);
+    puzzle_to_vector(sudoku, numbers);
     print_puzzle(sudoku);
     print_vector(numbers);
+
+    int zone = get_zone(grid.x, grid.y);
+    std::cout << "Zone: " << zone << std::endl;
 
 
     return EXIT_SUCCESS;

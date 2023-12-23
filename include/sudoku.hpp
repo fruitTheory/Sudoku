@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 
 class Sudoku{
     private:
@@ -29,39 +30,58 @@ struct Grid{
     int y;
 };
 
-void print_puzzle_row(Sudoku &sudoku, int row){
-        for(int x = 0; x < 9; x++){
-        std::cout << sudoku.puzzle[row][x] << " ";
-    } puts("\n");
-}
-
-void print_puzzle(Sudoku &sudoku){
-    for(int y = 0; y < 9; y++){
-        for(int x = 0; x < 9; x++){
-            std::cout << sudoku.puzzle[y][x] << " ";
-        } puts("");
-    } puts("");
-}
-
-void print_vector(std::vector<int> &numbers){
-    std::cout << "vector size: " << numbers.size() << std::endl;
-    for(int x = 0; x < numbers.size(); x++){
-        std::cout << numbers[x] << " ";
-    } puts("");
-}
-
-void store_puzzle(Sudoku &sudoku, std::vector<int> &numbers){
+void puzzle_to_vector(Sudoku &sudoku, std::vector<int> &numbers){
+    // self note later change to 2D loop
     for(int x = 0; x < 9; x++){
         numbers.push_back(sudoku.puzzle[0][x]);
     }
 }
 
-// Get the relevant tile to the selected cell
-void get_zone(Sudoku &sudoku, int y, int x){
+// Get the relevant tile to the selected cell, returns -1 if no zone hit
+int get_zone(int y, int x){
 
+    // Zone 0-2
+    if(y < 3 && x < 3){ return 0; }
+    else if(y < 3 && (x < 6 && x >= 3)){ return 1; }
+    else if(y < 3 && (x < 9 && x >= 6)){ return 2; }
+
+    // Zone 3-5
+    else if((y >= 3 && y < 6) && x < 3){ return 3; }
+    else if((y >= 3 && y < 6) && (x < 6 && x >= 3)){ return 4; }
+    else if((y >= 3 && y < 6) && (x < 9 && x >= 6)){ return 5; }
+
+    // Zone 6-8
+    else if((y >= 6 && y < 9) && x < 3){ return 6; }
+    else if((y >= 6 && y < 9) && (x < 6 && x >= 3)){ return 7; }
+    else if((y >= 6 && y < 9) && (x < 9 && x >= 6)){ return 8; }
+
+    else { return -1; }
 }
 
 // Provide Column-y and Row-x to update puzzle with a number
 void add_number(Sudoku &sudoku, int y, int x, int number){
     sudoku.puzzle[y][x] = number;
 }
+
+/*
+
+case zone 0: grid y < 3 && grid x < 3
+case zone 1: grid y < 3 && (grid x < 6 && grid x >= 3)
+case zone 2: grid y < 3 && (grid x < 6 && grid x >= 3)
+
+case zone 3: (grid y >= 3 && grid y < 6) && grid x < 3
+case zone 4: (grid y >= 3 && grid y < 6) && (grid x < 6 && grid x >= 3)
+
+so theres 9 zones 
+grid[0][0] grid[0][1] grid[0][2]    grid[0][3] grid[0][4] grid[0][5]    grid[0][6] grid[0][7] grid[0][8]
+grid[1][0] grid[1][1] grid[1][2]    grid[1][3] grid[1][4] grid[1][5]    grid[1][6] grid[1][7] grid[1][8]
+grid[2][0] grid[2][1] grid[2][2]    grid[2][3] grid[2][4] grid[2][5]    grid[2][6] grid[2][7] grid[2][8]
+
+grid[3][0] grid[3][1] grid[3][2]  etc..
+grid[4][0] grid[4][1] grid[4][2]  
+grid[5][0] grid[5][1] grid[5][2]
+
+grid[6][0] grid[6][1] grid[6][2]  etc..
+grid[7][0] grid[7][1] grid[7][2]  
+grid[8][0] grid[8][1] grid[8][2]
+*/
