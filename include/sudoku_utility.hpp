@@ -22,14 +22,14 @@ void print_puzzle(Sudoku &sudoku){
 
 void print_vector(std::vector<int> &numbers){
     std::cout << "Vector size: " << numbers.size() << std::endl;
-    for(int x = 0; x < numbers.size(); x++){
+    for(int x = 0; x < (int)numbers.size(); x++){
         std::cout << numbers[x] << " ";
     } newline, newline;
 }
 
 void print_vector_zone(std::vector<int> &numbers, int zone){
     std::cout << "Zone: " << zone << std::endl;
-    for(int x = 0; x < numbers.size(); x++){
+    for(int x = 0; x < (int)numbers.size(); x++){
         std::cout << numbers[x] << " ";
         if((x+1) % 3 == 0){ newline; }
     } newline;

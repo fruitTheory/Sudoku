@@ -1,9 +1,12 @@
+#include "sudoku.hpp"
+#include "sudoku_utility.hpp"
+#include "sudoku_zones.hpp"
 #include <cstdlib>
 #include <iostream>
 #include <vector>
-#include "sudoku.hpp"
-#include "sudoku_utility.hpp"
-using namespace std;
+using std::vector;
+
+
 
 int main(){
 
@@ -13,17 +16,18 @@ int main(){
 
     vector<int> numbers;
     vector<int> zone_numbers;
+    vector<int> missing_numbers;
 
     print_puzzle_row(sudoku, 0);
     print_puzzle(sudoku);
     // add_number(sudoku, grid.x, grid.y, 6);
     puzzle_to_vector(sudoku, numbers);
-    print_vector(numbers);
+    // print_vector(numbers);
 
     int zone = get_zone(grid.x, grid.y);
-    //std::cout << "Zone: " << zone << std::endl;
     store_zone(sudoku, zone_numbers, zone);
     print_vector_zone(zone_numbers, zone);
+    missing_numbers = get_missing_zone_numbers(sudoku, zone_numbers, zone);
 
     return EXIT_SUCCESS;
 
