@@ -10,19 +10,16 @@ int main(){
 
     Sudoku sudoku;
     vector<int> numbers;
+    Grid grid;
+    grid.x = 0; grid.y = 1;
 
     print_puzzle_row(sudoku, 0);
     print_puzzle(sudoku);
     store_puzzle(sudoku, numbers);
+    add_number(sudoku, grid.x, grid.y, 6);
+    print_puzzle(sudoku);
+    print_vector(numbers);
 
-    std::cout << numbers.size() << " ";
-    puts("");
-
-    for(int x = 0; x < numbers.size(); x++){
-        std::cout << numbers[x] << " ";
-    } puts("");
-
-    std::cout << "hello";
 
     return EXIT_SUCCESS;
 

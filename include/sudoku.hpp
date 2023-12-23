@@ -24,13 +24,18 @@ class Sudoku{
         };
 };
 
-void print_puzzle_row(Sudoku sudoku, int row){
+struct Grid{
+    int x;
+    int y;
+};
+
+void print_puzzle_row(Sudoku &sudoku, int row){
         for(int x = 0; x < 9; x++){
         std::cout << sudoku.puzzle[row][x] << " ";
     } puts("\n");
 }
 
-void print_puzzle(Sudoku sudoku){
+void print_puzzle(Sudoku &sudoku){
     for(int y = 0; y < 9; y++){
         for(int x = 0; x < 9; x++){
             std::cout << sudoku.puzzle[y][x] << " ";
@@ -38,8 +43,25 @@ void print_puzzle(Sudoku sudoku){
     } puts("");
 }
 
-void store_puzzle(Sudoku sudoku, std::vector<int> &numbers){
+void print_vector(std::vector<int> &numbers){
+    std::cout << "vector size: " << numbers.size() << std::endl;
+    for(int x = 0; x < numbers.size(); x++){
+        std::cout << numbers[x] << " ";
+    } puts("");
+}
+
+void store_puzzle(Sudoku &sudoku, std::vector<int> &numbers){
     for(int x = 0; x < 9; x++){
         numbers.push_back(sudoku.puzzle[0][x]);
     }
+}
+
+// Get the relevant tile to the selected cell
+void get_zone(Sudoku &sudoku, int y, int x){
+
+}
+
+// Provide Column-y and Row-x to update puzzle with a number
+void add_number(Sudoku &sudoku, int y, int x, int number){
+    sudoku.puzzle[y][x] = number;
 }
