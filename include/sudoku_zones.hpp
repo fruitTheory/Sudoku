@@ -4,7 +4,7 @@
 #include <vector>
 #include <iostream>
 
-// Get the relevant zone of the selected cell, returns -1 if no zone hit
+// Get the relevant zone of selected cell, returns -1 if no zone hit
 int get_zone(int y, int x){
 
     // Zone 0-2

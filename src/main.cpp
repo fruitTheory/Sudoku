@@ -14,7 +14,7 @@ int main(){
     Grid grid;
     grid.x = 0; grid.y = 3;
 
-    vector<int> puzzle_numbers;
+    vector<int> whole_puzzle;
     vector<int> zone_numbers;
     vector<int> available_zone_numbers;
     vector<int> missing_row_numbers;
@@ -22,15 +22,16 @@ int main(){
     print_puzzle(sudoku);
     print_puzzle_row(sudoku, 0);
     print_puzzle_column(sudoku, 0);
-    puzzle_to_vector(sudoku, puzzle_numbers);
+    puzzle_to_vector(sudoku, whole_puzzle);
+    print_vector(whole_puzzle);
 
     int zone = get_zone(grid.x, grid.y);
     store_zone_numbers(sudoku, zone_numbers, zone);
     print_zone_numbers(zone_numbers, zone);
 
-    // available_zone_numbers = get_available_zone_numbers(sudoku, zone_numbers, zone);
     get_missing_numbers(zone_numbers);
-    // missing_row_numbers = get_missing_row_numbers(sudoku, grid.y);
+    // make_puzzle();
+
 
     return EXIT_SUCCESS;
 

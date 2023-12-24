@@ -1,3 +1,3 @@
 #pragma once
 
-#define newline std::cout << std::endl
+#define endline std::cout << std::endl

@@ -15,28 +15,47 @@ class Sudoku{
 
         };
 
-        int puzzle[9][9] = 
+        std::array<std::array<int, 9>, 9> modern_p;
+        
+        // int puzzle[9][9] = 
+        // {
+        //     {9, 0, 4, 6, 7, 0, 3, 0, 1},
+        //     {2, 5, 7, 8, 0, 0, 0, 6, 0},
+        //     {6, 0, 0, 5, 0, 9, 0, 0, 0},
+        //     {0, 7, 0, 0, 1, 0, 0, 9, 2},
+        //     {0, 0, 0, 0, 0, 8, 0, 0, 0},
+        //     {4, 2, 9, 7, 0, 0, 0, 1, 0},
+        //     {0, 3, 2, 0, 5, 0, 9, 4, 0},
+        //     {1, 9, 0, 0, 0, 0, 5, 7, 3},
+        //     {7, 4, 0, 0, 0, 6, 0, 2, 0},
+        // };
+
+        int puzzle[9][9] =
         {
-            {9, 0, 4, 6, 7, 0, 3, 0, 1},
-            {2, 5, 7, 8, 0, 0, 0, 6, 0},
-            {6, 0, 0, 5, 0, 9, 0, 0, 0},
-            {0, 7, 0, 0, 1, 0, 0, 9, 2},
-            {0, 0, 0, 0, 0, 8, 0, 0, 0},
-            {4, 2, 9, 7, 0, 0, 0, 1, 0},
-            {0, 3, 2, 0, 5, 0, 9, 4, 0},
-            {1, 9, 0, 0, 0, 0, 5, 7, 3},
-            {7, 4, 0, 0, 0, 6, 0, 2, 0},
+            { 9, 0, 4, 6, 7, 0, 3, 0, 1, },
+            { 2, 5, 7, 8, 0, 0, 0, 6, 0, },
+            { 6, 0, 0, 5, 0, 9, 0, 0, 0, },
+            { 0, 7, 0, 0, 1, 0, 0, 9, 2, },
+            { 0, 0, 0, 0, 0, 8, 0, 0, 0, },
+            { 4, 2, 9, 7, 0, 0, 0, 1, 0, },
+            { 0, 3, 2, 0, 5, 0, 9, 4, 0, },
+            { 1, 9, 0, 0, 0, 0, 5, 7, 3, },
+            { 7, 4, 0, 0, 0, 6, 0, 2, 0, },
         };
+
+        int puzzle_size=(9*9);
 };
 
+// Position on grid (x, y)
 struct Grid{
     int x;
     int y;
 };
 
+// Store current puzzle into provided vector
 void puzzle_to_vector(Sudoku &sudoku, vector<int> &numbers){
-    // self note later change to 2D loop
-    for(int x = 0; x < (9*9); x++){
+    // Interestingly due to how arrays stored this will loop through
+    for(int x = 0; x < (sudoku.puzzle_size); x++){
         numbers.push_back(sudoku.puzzle[0][x]);
     }
 }
@@ -56,7 +75,7 @@ vector<int> get_missing_numbers(vector<int> available_numbers){
 
     std::cout << "Available: ";
 
-    // Manual sort - probably better to use std lib - this uses a compare method
+    // Manual sort - probably better to use stdlib - this uses a compare idea
     for(int y = 1; y <= 9; y++){
         for(int x = 0; x < 9; x++){
             if(y == available_numbers[x]){ 
@@ -65,7 +84,7 @@ vector<int> get_missing_numbers(vector<int> available_numbers){
                 continue;
             }
         } 
-    } newline;
+    } endline;
 
     std::cout << "Missing: ";
 
@@ -75,7 +94,7 @@ vector<int> get_missing_numbers(vector<int> available_numbers){
             std::cout << y << " ";
             missing_numbers.push_back(y);
         };
-    } newline;
+    } endline;
 
     return missing_numbers;
 
@@ -86,15 +105,27 @@ void compare_columns(Sudoku &sudoku);
 // Check which row as least missing numbers, return the row number
 void compare_rows(Sudoku &sudoku);
 
+// Make puzzle for faster copy paste, input string of numbers, can convert later
+void make_puzzle(){
+    std::string user_input;
+    //std::cin >> user_input;
+    // Can take user input or hardcode puzzle key here
+    user_input =
+    "904670301257800060600509000070010092000008000429700010032050940190000573740006020";
+
+    std::cout << "int puzzle[9][9] =" << std::endl;
+    std::cout << "{" << std::endl;
+    for(int x = 0; x < user_input.size(); x++){
+        
+        if(x == 0 || x % 9 == 0){ std::cout << "{ ";}
+        std::cout  << user_input[x] << ", ";
+        if((x+1) % 9 == 0){ std::cout << "},"; endline;}
+    }
+    std::cout << "};" << std::endl;
+}
+
 
 /*
-
-case zone 0: grid y < 3 && grid x < 3
-case zone 1: grid y < 3 && (grid x < 6 && grid x >= 3)
-case zone 2: grid y < 3 && (grid x < 6 && grid x >= 3)
-
-case zone 3: (grid y >= 3 && grid y < 6) && grid x < 3
-case zone 4: (grid y >= 3 && grid y < 6) && (grid x < 6 && grid x >= 3)
 
 so theres 9 zones 
 grid[0][0] grid[0][1] grid[0][2]    grid[0][3] grid[0][4] grid[0][5]    grid[0][6] grid[0][7] grid[0][8]
