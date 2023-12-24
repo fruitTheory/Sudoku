@@ -69,11 +69,11 @@ vector<int> get_missing_numbers(vector<int> available_numbers){
 
     std::cout << "Missing: ";
 
-    // If binary search for any number between 1-9 is not found store it as missing
+    // Binary search for any number between 1-9 if not found store it as missing
     for(int y = 1; y <= 9; y++){
         if(!std::binary_search(available_sorted.begin(), available_sorted.end(), y)){
             std::cout << y << " ";
-
+            missing_numbers.push_back(y);
         };
     } newline;
 

@@ -26,7 +26,7 @@ int get_zone(int y, int x){
 }
 
 // Takes zone and store into provided vector array
-void store_zone(Sudoku &sudoku, std::vector<int> &zone_numbers, int zone){
+void store_zone_numbers(Sudoku &sudoku, std::vector<int> &zone_numbers, int zone){
     switch (zone)
     {
         // Zone 0-2
@@ -110,15 +110,6 @@ void store_zone(Sudoku &sudoku, std::vector<int> &zone_numbers, int zone){
         default:{
             std::cout << "Zone not found" << std::endl;
             break;
-        }
-    }
-}
-
-void push_zone_number(Sudoku &sudoku, std::vector<int> &zone_numbers){
-
-    for(int y = 0; y < 3; y++){
-        for(int x = 0; x < 3; x++){
-            zone_numbers.push_back(sudoku.puzzle[y][x]);
         }
     }
 }

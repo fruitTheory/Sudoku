@@ -14,20 +14,20 @@ int main(){
     Grid grid;
     grid.x = 0; grid.y = 3;
 
-    vector<int> numbers;
+    vector<int> puzzle_numbers;
     vector<int> zone_numbers;
     vector<int> available_zone_numbers;
     vector<int> missing_row_numbers;
 
-    print_puzzle_row(sudoku, 0);
     print_puzzle(sudoku);
-    // add_number(sudoku, grid.x, grid.y, 6);
-    puzzle_to_vector(sudoku, numbers);
-    // print_vector(numbers);
+    print_puzzle_row(sudoku, 0);
+    print_puzzle_column(sudoku, 0);
+    puzzle_to_vector(sudoku, puzzle_numbers);
 
     int zone = get_zone(grid.x, grid.y);
-    store_zone(sudoku, zone_numbers, zone);
-    print_vector_zone(zone_numbers, zone);
+    store_zone_numbers(sudoku, zone_numbers, zone);
+    print_zone_numbers(zone_numbers, zone);
+
     // available_zone_numbers = get_available_zone_numbers(sudoku, zone_numbers, zone);
     get_missing_numbers(zone_numbers);
     // missing_row_numbers = get_missing_row_numbers(sudoku, grid.y);
