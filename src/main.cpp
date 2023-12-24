@@ -12,7 +12,7 @@ int main(){
 
     Sudoku sudoku;
     Grid grid;
-    grid.x = 0; grid.y = 3;
+    grid.x = 0; grid.y = 2;
 
     vector<int> whole_puzzle;
     vector<int> zone_numbers;
