@@ -2,9 +2,11 @@
 
 #include "config.hpp"
 #include <iostream>
+#include <array>
 #include <vector>
 #include <algorithm>
 using std::vector;
+using std::array;
 
 class Sudoku{
     private:
@@ -13,13 +15,10 @@ class Sudoku{
 
         void run(){
 
-        };
-
-        // std::array<std::array<int, 9>, 9> modern_p;
+        }
 
         // Easy
-        int puzzle[9][9] =
-        {
+        array<array<int, 9>, 9> puzzle = {{
             { 4, 0, 0, 3, 0, 7, 6, 0, 0, },
             { 0, 0, 3, 0, 0, 2, 8, 0, 0, },
             { 0, 2, 8, 5, 1, 0, 7, 0, 4, },
@@ -29,9 +28,13 @@ class Sudoku{
             { 6, 0, 2, 0, 4, 8, 3, 5, 1, },
             { 0, 3, 0, 0, 7, 0, 4, 0, 0, },
             { 0, 0, 9, 0, 0, 0, 2, 8, 0, },
-        };
+        }};
 
-        int puzzle_size=(9*9);
+        // Provide Column-y and Row-x to update puzzle with a number
+        void add_number(Sudoku &sudoku, int y, int x, int number){
+            sudoku.puzzle[y][x] = number;
+        }
+
 };
 
 // Position on grid (x, y)
@@ -44,18 +47,13 @@ struct Grid{
 vector<int> puzzle_to_vector(Sudoku &sudoku){
     vector<int> numbers;
     // Interestingly due to how arrays stored this will loop through
-    for(int x = 0; x < (sudoku.puzzle_size); x++){
+    for(size_t x = 0; x < (sudoku.puzzle.size()); x++){
         numbers.push_back(sudoku.puzzle[0][x]);
     }
     return numbers;
 }
 
-// Provide Column-y and Row-x to update puzzle with a number
-void add_number(Sudoku &sudoku, int y, int x, int number){
-    sudoku.puzzle[y][x] = number;
-}
-
-/* Store row of numbers into a vector, rows start at 0 */
+// Gets numbers in a row and return a vector, rows start at 0
 vector<int> get_row_numbers(Sudoku &sudoku, int row){
     std::vector<int> row_numbers;
     for(int x = 0; x < 9; x++){
@@ -64,7 +62,7 @@ vector<int> get_row_numbers(Sudoku &sudoku, int row){
     return row_numbers;
 }
 
-// Store column of numbers into a vector, rows start at 0
+// Gets numbers in a column and return a vector, column start at 0
 vector<int> get_column_numbers(Sudoku &sudoku, int column){
     vector<int> column_numbers;
     for(int x = 0; x < 9; x++){
@@ -74,8 +72,9 @@ vector<int> get_column_numbers(Sudoku &sudoku, int column){
 }
 
 // Cycles through empty spots in a column, does a cross check for each, meant for single column
-void column_crosscheck(Sudoku &sudoku, vector<int> &missing_numbers, int column){
+void column_crosscheck(Sudoku &sudoku, vector<int> &availabe_numbers, vector<int> &missing_numbers, int column){
     
+    std::array<vector<int>, 9>  temp;
     for(int x = 0; x < 9; x++){
         // replace 7 with incremental value to go through each column
         std::cout << sudoku.puzzle[x][column] << " ";
@@ -139,15 +138,15 @@ void make_puzzle(){
     user_input =
     "400307600003002800028510704100823900000750128004009000602048351030070400009000280";
 
-    std::cout << "int puzzle[9][9] =" << std::endl;
-    std::cout << "{" << std::endl;
+    std::cout << "array<array<int, 9>, 9> puzzle =" << std::endl;
+    std::cout << "{{" << std::endl;
     for(size_t x = 0; x < user_input.size(); x++){
         
         if(x == 0 || x % 9 == 0){ std::cout << "{ ";}
         std::cout  << user_input[x] << ", ";
         if((x+1) % 9 == 0){ std::cout << "},"; endline;}
     }
-    std::cout << "};" << std::endl;
+    std::cout << "}};" << std::endl;
 }
 
 

@@ -38,7 +38,7 @@ int main(){
     print_zone_numbers(zone_numbers, zone);
     vector<int> zone_missing =get_missing_numbers(zone_numbers);
 
-    column_crosscheck(sudoku, column_missing, 7);
+    column_crosscheck(sudoku, column_numbers, column_missing, 7);
     
 
     return EXIT_SUCCESS;
