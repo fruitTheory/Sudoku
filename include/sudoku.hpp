@@ -15,19 +15,20 @@ class Sudoku{
 
         };
 
-        std::array<std::array<int, 9>, 9> modern_p;
+        // std::array<std::array<int, 9>, 9> modern_p;
 
+        // Easy
         int puzzle[9][9] =
         {
-            { 9, 0, 4, 6, 7, 0, 3, 0, 1, },
-            { 2, 5, 7, 8, 0, 0, 0, 6, 0, },
-            { 6, 0, 0, 5, 0, 9, 0, 0, 0, },
-            { 0, 7, 0, 0, 1, 0, 0, 9, 2, },
-            { 0, 0, 0, 0, 0, 8, 0, 0, 0, },
-            { 4, 2, 9, 7, 0, 0, 0, 1, 0, },
-            { 0, 3, 2, 0, 5, 0, 9, 4, 0, },
-            { 1, 9, 0, 0, 0, 0, 5, 7, 3, },
-            { 7, 4, 0, 0, 0, 6, 0, 2, 0, },
+            { 4, 0, 0, 3, 0, 7, 6, 0, 0, },
+            { 0, 0, 3, 0, 0, 2, 8, 0, 0, },
+            { 0, 2, 8, 5, 1, 0, 7, 0, 4, },
+            { 1, 0, 0, 8, 2, 3, 9, 0, 0, },
+            { 0, 0, 0, 7, 5, 0, 1, 2, 8, },
+            { 0, 0, 4, 0, 0, 9, 0, 0, 0, },
+            { 6, 0, 2, 0, 4, 8, 3, 5, 1, },
+            { 0, 3, 0, 0, 7, 0, 4, 0, 0, },
+            { 0, 0, 9, 0, 0, 0, 2, 8, 0, },
         };
 
         int puzzle_size=(9*9);
@@ -65,7 +66,13 @@ void store_column_numbers(Sudoku &sudoku, std::vector<int> &column_numbers, int 
     }
 }
 
-// Finds missing numbers from any 'available numbers' input and returns a vector missing of numbers
+// Cycles through missing numbers in a column, does a cross check for each position
+int column_deduce(){
+    return 0;
+}
+
+/* Finds missing numbers from any 'available numbers' input and returns a vector missing of numbers
+Should be used in conjunction with functions that store available numbers into a vector */
 vector<int> get_missing_numbers(vector<int> available_numbers){
     
     // need 1 2 3 4 5 6 7 8 9
@@ -102,17 +109,23 @@ vector<int> get_missing_numbers(vector<int> available_numbers){
 }
 
 // Check which column has least missing numbers, return the column number
-void compare_columns(Sudoku &sudoku);
+void compare_columns(Sudoku &sudoku){}
 // Check which row has least missing numbers, return the row number
-void compare_rows(Sudoku &sudoku);
+void compare_rows(Sudoku &sudoku){}
 
 // Make puzzle for faster copy paste, input string of numbers, can convert later
 void make_puzzle(){
     std::string user_input;
     //std::cin >> user_input;
     // Can take user input or hardcode puzzle key here
+
+    // Hard
     user_input =
     "904670301257800060600509000070010092000008000429700010032050940190000573740006020";
+
+    // Easy
+    user_input =
+    "400307600003002800028510704100823900000750128004009000602048351030070400009000280";
 
     std::cout << "int puzzle[9][9] =" << std::endl;
     std::cout << "{" << std::endl;

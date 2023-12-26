@@ -41,7 +41,7 @@ int main(){
     store_zone_numbers(sudoku, zone_numbers, zone);
     print_zone_numbers(zone_numbers, zone);
     get_missing_numbers(zone_numbers);
-
+    
 
     return EXIT_SUCCESS;
 
