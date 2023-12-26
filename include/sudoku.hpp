@@ -74,12 +74,22 @@ vector<int> get_column_numbers(Sudoku &sudoku, int column){
 // Cycles through empty spots in a column, does a cross check for each, meant for single column
 void column_crosscheck(Sudoku &sudoku, vector<int> &availabe_numbers, vector<int> &missing_numbers, int column){
     
-    std::array<vector<int>, 9>  temp;
+    array<vector<int>, 9> temp;
+
+    // Store vectors into array
     for(int x = 0; x < 9; x++){
-        // replace 7 with incremental value to go through each column
         std::cout << sudoku.puzzle[x][column] << " ";
-        // std::cout << sudoku.puzzle[x][column] << " ";
+        temp[x] = get_row_numbers(sudoku, x);
     } endline;
+
+    // Read vectors from array
+    for(int x = 0; x < 9; x++){
+        vector<int> current = temp[x];
+        for(int value: current){
+            std::cout << value;
+        } endline;
+    } endline;
+
 }
 
 /* Finds missing numbers from any 'available numbers' input and returns a vector missing of numbers
@@ -138,8 +148,7 @@ void make_puzzle(){
     user_input =
     "400307600003002800028510704100823900000750128004009000602048351030070400009000280";
 
-    std::cout << "array<array<int, 9>, 9> puzzle =" << std::endl;
-    std::cout << "{{" << std::endl;
+    std::cout << "array<array<int, 9>, 9> puzzle = {{" << std::endl;
     for(size_t x = 0; x < user_input.size(); x++){
         
         if(x == 0 || x % 9 == 0){ std::cout << "{ ";}
