@@ -51,7 +51,21 @@ void add_number(Sudoku &sudoku, int y, int x, int number){
     sudoku.puzzle[y][x] = number;
 }
 
-// Finds missing numbers from any 'available numbers' input and returns a vector missing numbers
+// Store row of numbers into provided vector, rows start at 0
+void store_row_numbers(Sudoku &sudoku, std::vector<int> &row_numbers, int row){
+    for(int x = 0; x < 9; x++){
+        row_numbers.push_back(sudoku.puzzle[row][x]);
+    }
+}
+
+// Store column of numbers into provided vector, rows start at 0
+void store_column_numbers(Sudoku &sudoku, std::vector<int> &column_numbers, int column){
+    for(int x = 0; x < 9; x++){
+        column_numbers.push_back(sudoku.puzzle[x][column]);
+    }
+}
+
+// Finds missing numbers from any 'available numbers' input and returns a vector missing of numbers
 vector<int> get_missing_numbers(vector<int> available_numbers){
     
     // need 1 2 3 4 5 6 7 8 9
@@ -81,15 +95,15 @@ vector<int> get_missing_numbers(vector<int> available_numbers){
             std::cout << y << " ";
             missing_numbers.push_back(y);
         };
-    } endline;
+    } endline; endline;
 
     return missing_numbers;
 
 }
 
-// Check which column as least missing numbers, return the column number
+// Check which column has least missing numbers, return the column number
 void compare_columns(Sudoku &sudoku);
-// Check which row as least missing numbers, return the row number
+// Check which row has least missing numbers, return the row number
 void compare_rows(Sudoku &sudoku);
 
 // Make puzzle for faster copy paste, input string of numbers, can convert later
@@ -102,7 +116,7 @@ void make_puzzle(){
 
     std::cout << "int puzzle[9][9] =" << std::endl;
     std::cout << "{" << std::endl;
-    for(int x = 0; x < user_input.size(); x++){
+    for(size_t x = 0; x < user_input.size(); x++){
         
         if(x == 0 || x % 9 == 0){ std::cout << "{ ";}
         std::cout  << user_input[x] << ", ";
