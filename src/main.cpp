@@ -14,33 +14,31 @@ int main(){
     Grid grid;
     grid.x = 0; grid.y = 2;
 
-    vector<int> whole_puzzle;
-    vector<int> zone_numbers;
-    vector<int> row_numbers;
-    vector<int> column_numbers;
 
     // Puzzle
     print_puzzle(sudoku);
     print_puzzle_row(sudoku, 0);
     print_puzzle_column(sudoku, 0);
-    puzzle_to_vector(sudoku, whole_puzzle);
+    vector<int> whole_puzzle = puzzle_to_vector(sudoku);
     print_vector(whole_puzzle);
 
     // Row
-    store_row_numbers(sudoku, row_numbers, 0);
+    vector<int> row_numbers = get_row_numbers(sudoku, 0);
     print_vector(row_numbers);
-    get_missing_numbers(row_numbers);
+    vector<int> row_missing = get_missing_numbers(row_numbers);
 
     // Column
-    store_column_numbers(sudoku, column_numbers, 0);
+    vector<int> column_numbers = get_column_numbers(sudoku, 7);
     print_vector(column_numbers);
-    get_missing_numbers(column_numbers);
+    vector<int> column_missing = get_missing_numbers(column_numbers);
 
     // Zone
     int zone = get_zone(grid.x, grid.y);
-    store_zone_numbers(sudoku, zone_numbers, zone);
+    vector<int> zone_numbers = get_zone_numbers(sudoku, zone);
     print_zone_numbers(zone_numbers, zone);
-    get_missing_numbers(zone_numbers);
+    vector<int> zone_missing =get_missing_numbers(zone_numbers);
+
+    column_crosscheck(sudoku, column_missing, 7);
     
 
     return EXIT_SUCCESS;

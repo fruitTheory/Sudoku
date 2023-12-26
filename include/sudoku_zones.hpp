@@ -26,7 +26,10 @@ int get_zone(int y, int x){
 }
 
 // Takes zone and store into provided vector array
-void store_zone_numbers(Sudoku &sudoku, std::vector<int> &zone_numbers, int zone){
+std::vector<int> get_zone_numbers(Sudoku &sudoku, int zone){
+
+    std::vector<int> zone_numbers;
+
     switch (zone)
     {
         // Zone 0-2
@@ -109,7 +112,10 @@ void store_zone_numbers(Sudoku &sudoku, std::vector<int> &zone_numbers, int zone
 
         default:{
             std::cout << "Zone not found" << std::endl;
-            break;
+            return (std::vector<int>)EXIT_FAILURE;
         }
     }
+
+    return zone_numbers;
+
 }

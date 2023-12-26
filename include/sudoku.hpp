@@ -40,35 +40,47 @@ struct Grid{
     int y;
 };
 
-// Store current puzzle into provided vector
-void puzzle_to_vector(Sudoku &sudoku, vector<int> &numbers){
+// Store current puzzle into a vector
+vector<int> puzzle_to_vector(Sudoku &sudoku){
+    vector<int> numbers;
     // Interestingly due to how arrays stored this will loop through
     for(int x = 0; x < (sudoku.puzzle_size); x++){
         numbers.push_back(sudoku.puzzle[0][x]);
     }
+    return numbers;
 }
+
 // Provide Column-y and Row-x to update puzzle with a number
 void add_number(Sudoku &sudoku, int y, int x, int number){
     sudoku.puzzle[y][x] = number;
 }
 
-// Store row of numbers into provided vector, rows start at 0
-void store_row_numbers(Sudoku &sudoku, std::vector<int> &row_numbers, int row){
+/* Store row of numbers into a vector, rows start at 0 */
+vector<int> get_row_numbers(Sudoku &sudoku, int row){
+    std::vector<int> row_numbers;
     for(int x = 0; x < 9; x++){
         row_numbers.push_back(sudoku.puzzle[row][x]);
     }
+    return row_numbers;
 }
 
-// Store column of numbers into provided vector, rows start at 0
-void store_column_numbers(Sudoku &sudoku, std::vector<int> &column_numbers, int column){
+// Store column of numbers into a vector, rows start at 0
+vector<int> get_column_numbers(Sudoku &sudoku, int column){
+    vector<int> column_numbers;
     for(int x = 0; x < 9; x++){
         column_numbers.push_back(sudoku.puzzle[x][column]);
     }
+    return column_numbers;
 }
 
-// Cycles through missing numbers in a column, does a cross check for each position
-int column_deduce(){
-    return 0;
+// Cycles through empty spots in a column, does a cross check for each, meant for single column
+void column_crosscheck(Sudoku &sudoku, vector<int> &missing_numbers, int column){
+    
+    for(int x = 0; x < 9; x++){
+        // replace 7 with incremental value to go through each column
+        std::cout << sudoku.puzzle[x][column] << " ";
+        // std::cout << sudoku.puzzle[x][column] << " ";
+    } endline;
 }
 
 /* Finds missing numbers from any 'available numbers' input and returns a vector missing of numbers
