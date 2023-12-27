@@ -40,7 +40,7 @@ void print_vector(std::vector<int> &numbers){
 
 // Prints any pair vector supplied
 void print_vector_pairs(std::vector<std::pair<int, int>> &numbers){
-    std::cout << "Vector size: " << numbers.size() << std::endl;
+    std::cout << "Vector positions: " << std::endl;
     for(size_t x = 0; x < numbers.size(); x++){
         std::cout << numbers[x].first << numbers[x].second << " ";
     } endline, endline;

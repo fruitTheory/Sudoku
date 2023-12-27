@@ -1,11 +1,8 @@
 #include "sudoku.hpp"
 #include "sudoku_utility.hpp"
 #include "sudoku_zones.hpp"
+#include "sudoku_seek.hpp"
 #include <cstdlib>
-#include <iostream>
-#include <vector>
-using std::vector;
-using std::pair;
 
 
 int main(){
@@ -13,43 +10,14 @@ int main(){
     Sudoku sudoku;
     Grid grid;
     int column, row;
-    grid.x = 0; grid.y = 2;
-    column = 6; row = 0;
+    grid.x = 0; grid.y = 6;
+    column = 6; row = 0; endline;
 
-
-    // Puzzle
-    print_puzzle(sudoku);
-    print_puzzle_row(sudoku, 0);
-    print_puzzle_column(sudoku, 0);
-    vector<int> whole_puzzle = puzzle_to_vector(sudoku);
-    print_vector(whole_puzzle);
-
-    // Row
-    vector<int> row_numbers = get_row_numbers(sudoku, row);
-    print_vector(row_numbers);
-    vector<pair<int, int>> row_positions = get_column_positions(sudoku, row);
-    print_vector_pairs(row_positions);
-    vector<int> row_missing = get_missing_numbers(row_numbers);
-
-    // Column
-    vector<int> column_numbers = get_column_numbers(sudoku, column);
-    print_vector(column_numbers);
-    vector<pair<int, int>> column_positions = get_column_positions(sudoku, column);
-    print_vector_pairs(column_positions);
-    vector<int> column_missing = get_missing_numbers(column_numbers);
-
-    // Zone
-    int zone = get_zone(grid);
-    vector<int> zone_numbers = get_zone_numbers(sudoku, zone);
-    print_zone_numbers(zone_numbers, zone);
-    vector<pair<int, int>> zone_positions = get_zone_positions(sudoku, zone);
-    print_vector_pairs(zone_positions);
-    vector<int> zone_missing =get_missing_numbers(zone_numbers);
-
-    // column_crosscheck(sudoku, column_numbers, column_missing, 6);
-    // print_puzzle(sudoku);
-    // solve(sudoku, column_missing);
-    // print_puzzle(sudoku);
+    zone_seek(sudoku, grid);
+    std::cout << "-------------------------" << std::endl;
+    column_seek(sudoku, grid, column);
+    std::cout << "-------------------------" << std::endl;
+    row_seek(sudoku, grid, row);
 
     return EXIT_SUCCESS;
 

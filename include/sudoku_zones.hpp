@@ -3,6 +3,7 @@
 #include "sudoku.hpp"
 #include <vector>
 #include <iostream>
+#include <stdexcept>
 
 // Get the relevant zone of selected cell, returns -1 if no zone hit
 int get_zone(Grid &grid){

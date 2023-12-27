@@ -4,6 +4,7 @@
 #include <iostream>
 #include <array>
 #include <vector>
+#include <utility>
 #include <algorithm>
 using std::vector;
 using std::array;
@@ -96,11 +97,11 @@ vector<pair<int, int>> get_column_positions(Sudoku &sudoku, int column){
     return column_coords;
 }
 
-void solve(Sudoku &sudoku, vector<int> &missing_numbers){
+void solve(Sudoku &sudoku, vector<int> &missing_numbers, vector<pair<int, int>> position){
     int probability = 100/missing_numbers.size();
     std::cout << 100/missing_numbers.size(); endline;
     std::cout << missing_numbers[0]; endline;
-    if(probability == 100){ sudoku.add_number(sudoku, 5, 6, missing_numbers[0]); }
+    if(probability == 100){ sudoku.add_number(sudoku, position[0].first, position[0].second, missing_numbers[0]); }
 }
 
 // Cycles through empty spots in a column, does a cross check for each, meant for single column
