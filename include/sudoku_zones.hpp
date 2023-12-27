@@ -26,7 +26,7 @@ int get_zone(Grid &grid){
     else { return -1; }
 }
 
-// Takes zone and store into provided vector array
+// Takes zone and returns the zone cell numbers
 std::vector<int> get_zone_numbers(Sudoku &sudoku, int zone){
 
     std::vector<int> zone_numbers;
@@ -112,11 +112,114 @@ std::vector<int> get_zone_numbers(Sudoku &sudoku, int zone){
         }
 
         default:{
-            std::cout << "Zone not found" << std::endl;
-            return (std::vector<int>)EXIT_FAILURE;
+            throw std::runtime_error("Zone input not found");
         }
     }
 
     return zone_numbers;
+
+}
+
+// Takes zone and returns zone cell positions
+std::vector<std::pair<int, int>> get_zone_positions(Sudoku &sudoku, int zone){
+
+    std::vector<pair<int, int>> zone_coords;
+    std::pair<int, int> coord;
+
+    switch (zone)
+    {
+        // Zone 0-2
+        case 0:{
+            for(int y = 0; y < 3; y++){
+                for(int x = 0; x < 3; x++){
+                    coord.first = y; coord.second = x;
+                    zone_coords.push_back(coord);
+                }
+            }
+            break;
+        }
+        case 1:{
+            for(int y = 0; y < 3; y++){
+                for(int x = 3; x < 6; x++){
+                    coord.first = y; coord.second = x;
+                    zone_coords.push_back(coord);
+                }
+            }
+            break;
+        }
+        case 2:{
+            for(int y = 0; y < 3; y++){
+                for(int x = 6; x < 9; x++){
+                    coord.first = y; coord.second = x;
+                    zone_coords.push_back(coord);
+                }
+            }
+            break;
+        }
+
+        // Zone 3-5
+        case 3:{
+            for(int y = 3; y < 6; y++){
+                for(int x = 0; x < 3; x++){
+                    coord.first = y; coord.second = x;
+                    zone_coords.push_back(coord);
+                }
+            }
+            break;
+        }
+        case 4:{
+            for(int y = 3; y < 6; y++){
+                for(int x = 3; x < 6; x++){
+                    coord.first = y; coord.second = x;
+                    zone_coords.push_back(coord);
+                }
+            }
+            break;
+        }
+        case 5:{
+            for(int y = 3; y < 6; y++){
+                for(int x = 6; x < 9; x++){
+                    coord.first = y; coord.second = x;
+                    zone_coords.push_back(coord);
+                }
+            }
+            break;
+        }
+
+        // Zone 6-8
+        case 6:{
+            for(int y = 6; y < 9; y++){
+                for(int x = 0; x < 3; x++){
+                    coord.first = y; coord.second = x;
+                    zone_coords.push_back(coord);
+                }
+            }
+            break;
+        }
+        case 7:{
+            for(int y = 6; y < 9; y++){
+                for(int x = 3; x < 6; x++){
+                    coord.first = y; coord.second = x;
+                    zone_coords.push_back(coord);
+                }
+            }
+            break;
+        }
+        case 8:{
+            for(int y = 6; y < 9; y++){
+                for(int x = 6; x < 9; x++){
+                    coord.first = y; coord.second = x;
+                    zone_coords.push_back(coord);
+                }
+            }
+            break;
+        }
+
+        default:{
+            throw std::runtime_error("Zone input not found, coord related");
+        }
+    }
+
+    return zone_coords;
 
 }

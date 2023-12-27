@@ -42,12 +42,14 @@ int main(){
     int zone = get_zone(grid);
     vector<int> zone_numbers = get_zone_numbers(sudoku, zone);
     print_zone_numbers(zone_numbers, zone);
+    vector<pair<int, int>> zone_positions = get_zone_positions(sudoku, zone);
+    print_vector_pairs(zone_positions);
     vector<int> zone_missing =get_missing_numbers(zone_numbers);
 
     // column_crosscheck(sudoku, column_numbers, column_missing, 6);
-    print_puzzle(sudoku);
-    solve(sudoku, column_missing);
-    print_puzzle(sudoku);
+    // print_puzzle(sudoku);
+    // solve(sudoku, column_missing);
+    // print_puzzle(sudoku);
 
     return EXIT_SUCCESS;
 
