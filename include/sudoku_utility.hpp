@@ -30,18 +30,26 @@ void print_puzzle(Sudoku &sudoku){
     } endline;
 }
 
-// Prints any vector supplied
+// Prints any integer vector supplied
 void print_vector(std::vector<int> &numbers){
     std::cout << "Vector size: " << numbers.size() << std::endl;
-    for(int x = 0; x < (int)numbers.size(); x++){
+    for(size_t x = 0; x < numbers.size(); x++){
         std::cout << numbers[x] << " ";
+    } endline, endline;
+}
+
+// Prints any pair vector supplied
+void print_vector_pairs(std::vector<std::pair<int, int>> &numbers){
+    std::cout << "Vector size: " << numbers.size() << std::endl;
+    for(size_t x = 0; x < numbers.size(); x++){
+        std::cout << numbers[x].first << numbers[x].second << " ";
     } endline, endline;
 }
 
 // Prints supplied vector in a grid pattern
 void print_zone_numbers(std::vector<int> &numbers, int zone){
     std::cout << "Zone: " << zone << std::endl;
-    for(int x = 0; x < (int)numbers.size(); x++){
+    for(size_t x = 0; x < numbers.size(); x++){
         std::cout << numbers[x] << " ";
         if((x+1) % 3 == 0){ endline; }
     } endline;

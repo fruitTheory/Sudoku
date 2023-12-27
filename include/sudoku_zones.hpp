@@ -5,8 +5,9 @@
 #include <iostream>
 
 // Get the relevant zone of selected cell, returns -1 if no zone hit
-int get_zone(int y, int x){
+int get_zone(Grid &grid){
 
+    int y = grid.y; int x = grid.x; 
     // Zone 0-2
     if(y < 3 && x < 3){ return 0; }
     else if(y < 3 && (x < 6 && x >= 3)){ return 1; }
