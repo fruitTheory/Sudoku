@@ -1,6 +1,6 @@
 # Sudoku
 
-Thing that solves Sudoku puzzles.
+Currently a foundation for Sudoku solver.
 
 Could do..
 - Finish Solver
