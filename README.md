@@ -1,6 +1,6 @@
 # Sudoku
 
-Currently a foundation for Sudoku solver.
+Currently a foundation for a Sudoku solver.
 
 Could do..
 - Finish Solver
