@@ -1,33 +1,40 @@
-INCLUDES ?= -I ./include/ 
-BUILD = ./build/
-SOURCES = ./src/
-BINARIES = ./bin/
-FLAGS = -g -Wall -Wextra -Wno-unused-parameter -fdiagnostics-color=always #-O3
 CC = g++
-OBJECTS =
+FLAGS = -g -Wall -Wextra -Wno-unused-parameter -fdiagnostics-color=always
 LIBRARY_DIR ?=
 LINKED_LIBRARIES =
 
-all: ${OBJECTS}
-	if [ ! -d bin ]; then mkdir bin; fi
+SRC = main.cpp sudoku.cpp sudoku_utility.cpp sudoku_seek.cpp sudoku_zones.cpp
+OBJECTS = $(SRC:%.cpp=$(BUILD)%.o)
+
+BUILD = ./build/
+BINARIES = ./bin/
+SOURCES = ./src/
+INCLUDES ?= -I ./include/
+
+# The main call
+all: directories main
+
+directories:
+	if [ ! -d bin ]; then mkdir bin; fi	
 	if [ ! -d build ]; then mkdir build; fi
-	${CC} ${FLAGS} ${INCLUDES} ${OBJECTS} ${SOURCES}main.cpp ${LIBRARY_DIR} ${LINKED_LIBRARIES} -o ${BINARIES}main
+
+main: $(OBJECTS)
+	$(CC) $(FLAGS) $(INCLUDES) $(OBJECTS) $(LIBRARY_DIR) $(LINKED_LIBRARIES) -o $(BINARIES)main
 	make run
 
-# Build all - wildcards
-${BUILD}%.o:${SOURCES}%.cpp
-	${CC} ${FLAGS} ${INCLUDES} -c $< -o $@
+# Build all - wildcard
+$(BUILD)%.o: $(SOURCES)%.cpp
+	$(CC) $(FLAGS) $(INCLUDES) -c $< -o $@
 
 .PHONY: clean run
 
 # Clean build folder if needed
 clean:
-	rm ${BINARIES}*.exe
-	rm ${BUILD}*.o
-
-# Run with file
+	rm -f $(BUILD)*.o
+	rm -f $(BINARIES)*.exe
+	
 RUN_FILE = main
 EXT = exe
 run:
-	${BINARIES}${RUN_FILE}.${EXT}
+	$(BINARIES)$(RUN_FILE).$(EXT)
 
