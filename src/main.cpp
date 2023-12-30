@@ -17,7 +17,7 @@ int main(){
     // std::cout << "-------------------------" << std::endl;
     // column_seek(column);
     // std::cout << "-------------------------" << std::endl;
-    row_seek(row);
+    get_row_hits(row);
     
 
     return EXIT_SUCCESS;
