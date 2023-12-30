@@ -136,7 +136,7 @@ vector<int> get_missing_numbers(vector<int> available_numbers){
         if(!std::binary_search(available_sorted.begin(), available_sorted.end(), y)){
             // std::cout << y << " ";
             missing_numbers.push_back(y);
-        };
+        }
     } // endline; endline;
 
     return missing_numbers;

@@ -10,14 +10,15 @@ int main(){
     Sudoku sudoku;
     Grid grid;
     int column, row;
-    grid.x = 0; grid.y = 6;
-    column = 6; row = 0; // endline;
+    grid.x = 0; grid.y = 0;
+    column = 0; row = 0; // endline;
 
     // zone_seek(grid);
     // std::cout << "-------------------------" << std::endl;
     // column_seek(column);
     // std::cout << "-------------------------" << std::endl;
     row_seek(row);
+    
 
     return EXIT_SUCCESS;
 

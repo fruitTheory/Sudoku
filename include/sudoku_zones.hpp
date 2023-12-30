@@ -4,7 +4,7 @@
 #include <vector>
 
 // Get the relevant zone of selected cell, returns -1 if no zone hit
-int get_zone(Grid &grid);
+int get_zone(int pos_y, int pos_x);
 
 // Takes zone and returns the zone cell numbers
 std::vector<int> get_zone_numbers(int zone);

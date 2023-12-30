@@ -1,6 +1,5 @@
 #pragma once
 
-#include "sudoku.hpp"
 #include <vector>
 
 // Prints single row from puzzle
