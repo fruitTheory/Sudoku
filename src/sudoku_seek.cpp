@@ -48,20 +48,15 @@ void get_row_hits(int row){
         }
     }
 
-    // Of the missing values hit values lists where each value hit for each column
-    print_vector(hit_values);
-    print_vector(row_missing);
-
     // return hit_values;
 
+
+    // Call column_crosscheck(vector<int> hit_values)
     array<vector<int>, 9> column_array_hits = {};
-
-    // Array of 9 vectors each representing a rows column
-    // Within those vectors are numbers that where found as a hit
     // A hit is a (missing number that exists in that row)
+    // Will check columns that cross row cell for hits
 
-    // Note: size of test vector was 45, always should be divisable by 9
-
+    // Note: size of vector should always be divisable by 9
     for(size_t x = 0; x < hit_values.size(); x++){
         if(hit_values[x] != 0){
             int column = (x % 9); // get column number
@@ -69,14 +64,67 @@ void get_row_hits(int row){
             column_array_hits[column].push_back(hit_value); // push value to relevant columm
         }
     }
+    
+    // Prints the hit values
+    // std::cout << "Hit values per column:\n\n";
+    // for(int x = 0; x < 9; x++){
+    //     print_vector(column_array_hits[x]);
+    // }
 
-    std::cout << "Hit values per column:\n\n";
-    for(int x = 0; x < 9; x++){
-        print_vector(column_array_hits[x]);
-    }
-    
     // return column_array_hits;
+
+
+    // Call get_empty_cells(vector<int> row_numbers)
+    // Returns which row cells are empty, may not be needed, just separate out
+    vector<int> empty_rows;
+    for(int x = 0; x < 9; x++){
+        if(row_numbers[x] == 0) { empty_rows.push_back(x); }
+    }
+
+
+    // Call get_possible_values(vector<int> &missing_numbers, array<vector<int>, 9> hits)
+    // Returns possible numbers for each cell - rename func to get possible or somtn ^
+    solve_temp(row_missing, row_positions, column_array_hits);
     
+}
+
+void solve_temp(vector<int> &missing_numbers, vector<pair<int, int>> positions, array<vector<int>, 9> hits){
+
+    // print_vector(missing_numbers);
+    array<vector<int>, 9> possible;
+
+    // Loop and add possibilites to vector, should be opposite of hits vector
+    for(size_t y = 0; y < missing_numbers.size(); y++){
+        int compare_value = missing_numbers[y];
+        // std::cout << "compare value: " << compare_value << " \n";
+        for(int x = 0; x < 9; x++){
+            int count = std::count(hits[x].begin(), hits[x].end(), compare_value);
+            if(!count){ possible[x].push_back(compare_value); }
+            // std::cout << count << " \n";
+        }
+    }
+
+    for(int x = 0; x < 9; x++){
+        //print_vector(hits[x]);
+        print_vector(possible[x]);
+    }
+    // return possible;
+
+
+    // Call solve(array<vector<int>, 9> possible)
+    // std::cout << "test: " << possible[2][1]; endline;
+
+    // If only one possible value, add to board
+    for(int x = 0; x < 9; x++){
+        if(possible[x].size() == 1){ 
+            Sudoku::add_number(positions[x].first, positions[x].second, possible[x][0]); 
+        }
+    } print_puzzle();
+
+    // int probability = 100/possible[2].size();
+    // if(probability == 100){ 
+    //     Sudoku::add_number(positions[2].first, positions[2].second, possible[2][0]); 
+    // }
 }
 
 // Call from row seek, takes a column(for current row) and compares against a compare_value, needs 1-9 iteration
@@ -90,7 +138,7 @@ int cross_compare_columns(int column, int compare_value, int iteration){
     int column_hit;
 
     if(std::binary_search(column_numbers.begin(), column_numbers.end(), compare_value)){
-        std::cout << "Found: " << compare_value << std::endl;
+        // std::cout << "Found: " << compare_value << std::endl;
         column_hit = compare_value;
     } else { column_hit = 0; }
 
@@ -140,9 +188,9 @@ void cross_compare_zone(int position_y, int position_x, int compare_value){
 
 // This is a state, ideally each missing number is in a state of being or not being per cell
 // When a number for sure cant be in a spot this should be stored
-void check_deduction(){
+// void check_deduction(){
 
-}
+// }
 
 // void num_check(int row, int column){
 

@@ -22,11 +22,6 @@ array<array<int, 9>, 9> Sudoku::puzzle = {{
     { 0, 0, 9, 0, 0, 0, 2, 8, 0, },
 }};
 
-// Provide Column-y and Row-x to update puzzle with a number
-inline void Sudoku::add_number(int y, int x, int number){
-    Sudoku::puzzle[y][x] = number;
-}
-
 // Store current puzzle into a vector
 vector<int> puzzle_to_vector(){
     vector<int> puzzle_numbers;
@@ -85,27 +80,6 @@ void solve(Sudoku &sudoku, vector<int> &missing_numbers, vector<pair<int, int>> 
     if(probability == 100){ sudoku.add_number(position[0].first, position[0].second, missing_numbers[0]); }
 }
 
-// Cycles through empty spots in a column, does a cross check for each, meant for single column
-void column_crosscheck(vector<int> &availabe_numbers, vector<int> &missing_numbers, int column){
-    
-    array<vector<int>, 9> puzzle_rows;
-
-    // Store vectors of rows into array
-    for(int x = 0; x < 9; x++){
-        std::cout << Sudoku::puzzle[x][column] << " ";
-        puzzle_rows[x] = get_row_numbers(x);
-    } endline;
-
-    // Read vectors from array
-    for(int x = 0; x < 9; x++){
-        vector<int> current_vector = puzzle_rows[x];
-        for(int value: current_vector){
-            std::cout << value;
-        } endline;
-    } endline;
-
-}
-
 /* Find and sort missing numbers from 'available numbers' and return a vector missing of numbers
 Should be used in conjunction with functions that store available numbers into a vector */
 vector<int> get_missing_numbers(vector<int> available_numbers){
@@ -142,11 +116,6 @@ vector<int> get_missing_numbers(vector<int> available_numbers){
     return missing_numbers;
 
 }
-
-// Check which column has least missing numbers, return the column number
-void compare_columns(){}
-// Check which row has least missing numbers, return the row number
-void compare_rows(){}
 
 // Make puzzle for faster copy paste
 // Can take user input or hardcode puzzle key here
@@ -188,3 +157,29 @@ grid[6][0] grid[6][1] grid[6][2]  etc..
 grid[7][0] grid[7][1] grid[7][2]  
 grid[8][0] grid[8][1] grid[8][2]
 */
+
+// // Cycles through empty spots in a column, does a cross check for each, meant for single column
+// void column_crosscheck(vector<int> &availabe_numbers, vector<int> &missing_numbers, int column){
+    
+//     array<vector<int>, 9> puzzle_rows;
+
+//     // Store vectors of rows into array
+//     for(int x = 0; x < 9; x++){
+//         std::cout << Sudoku::puzzle[x][column] << " ";
+//         puzzle_rows[x] = get_row_numbers(x);
+//     } endline;
+
+//     // Read vectors from array
+//     for(int x = 0; x < 9; x++){
+//         vector<int> current_vector = puzzle_rows[x];
+//         for(int value: current_vector){
+//             std::cout << value;
+//         } endline;
+//     } endline;
+
+// }
+
+// // Check which column has least missing numbers, return the column number
+// void compare_columns(){}
+// // Check which row has least missing numbers, return the row number
+// void compare_rows(){}

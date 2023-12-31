@@ -16,7 +16,10 @@ class Sudoku{
 
         static array<array<int, 9>, 9> puzzle;
 
-        static inline void add_number(int y, int x, int number);
+        static inline void add_number(int y, int x, int number){
+            // Provide Col-y and Row-x to update puzzle with a number
+            Sudoku::puzzle[y][x] = number;
+        }
 
         int column, row;
 
@@ -45,17 +48,14 @@ vector<pair<int, int>> get_column_positions(int column);
 
 void solve(Sudoku &sudoku, vector<int> &missing_numbers, vector<pair<int, int>> position);
 
-// Cycles through empty spots in a column, does a cross check for each, meant for single column
-void column_crosscheck(vector<int> &availabe_numbers, vector<int> &missing_numbers, int column);
-
 /* Find and sort missing numbers from 'available numbers' and return a vector missing of numbers
 Should be used in conjunction with functions that store available numbers into a vector */
 vector<int> get_missing_numbers(vector<int> available_numbers);
 
-// Check which column has least missing numbers, return the column number
-void compare_columns();
-// Check which row has least missing numbers, return the row number
-void compare_rows();
+// // Check which column has least missing numbers, return the column number
+// void compare_columns();
+// // Check which row has least missing numbers, return the row number
+// void compare_rows();
 
 // Make puzzle for faster copy paste
 // Can take user input or hardcode puzzle key here
