@@ -18,7 +18,7 @@ void zone_seek(int position_y, int position_x){
     int zone = get_zone(position_y, position_x);
     vector<int> zone_numbers = get_zone_numbers(zone);
     vector<pair<int, int>> zone_positions = get_zone_positions(zone);
-    vector<int> zone_missing =get_missing_numbers(zone_numbers);
+    vector<int> zone_missing = get_missing_numbers(zone_numbers);
 
     print_zone_numbers(zone_numbers, zone);
     print_vector_pairs(zone_positions);
@@ -27,13 +27,17 @@ void zone_seek(int position_y, int position_x){
 
 void get_row_hits(int row){
 
-    std::cout << "Row:" << std::endl;
+    /*
+        -------------Row Data----------------
+    */
+
+    // std::cout << "Row:" << std::endl;
 
     vector<int> row_numbers = get_row_numbers(row);
     vector<pair<int, int>> row_positions = get_row_positions(row);
     vector<int> row_missing = get_missing_numbers(row_numbers);
 
-    print_vector(row_numbers);
+    // print_vector(row_numbers);
     
     vector<int> hit_values;
 
@@ -42,7 +46,7 @@ void get_row_hits(int row){
         for(int x = 0; x < 9; x++){
             if(row_numbers[x] == 0){
                 // loop through each row, passing along each missing number to compare
-                int cross_compare_value = cross_compare_columns(row_positions[x].second, row_missing[y], x);
+                int cross_compare_value = cross_compare_columns(row_positions[x].second, row_missing[y]);
                 hit_values.push_back(cross_compare_value);
             } else { hit_values.push_back(0); }
         }
@@ -51,28 +55,99 @@ void get_row_hits(int row){
     // return hit_values;
 
 
+    /*
+        -------------Column Hits----------------
+    */
+
+    array<vector<int>, 9> global_array_hits;
+
     // Call column_crosscheck(vector<int> hit_values)
-    array<vector<int>, 9> column_array_hits = {};
+    array<vector<int>, 9> column_array_hits;
     // A hit is a (missing number that exists in that row)
     // Will check columns that cross row cell for hits
 
     // Note: size of vector should always be divisable by 9
     for(size_t x = 0; x < hit_values.size(); x++){
         if(hit_values[x] != 0){
-            int column = (x % 9); // get column number
+            int column = (x % 9); // get column(cell) number
             int hit_value = hit_values[x]; // get the value hit
             column_array_hits[column].push_back(hit_value); // push value to relevant columm
+            global_array_hits[column].push_back(hit_value); // push value to relevant columm
         }
     }
-    
-    // Prints the hit values
-    // std::cout << "Hit values per column:\n\n";
-    // for(int x = 0; x < 9; x++){
-    //     print_vector(column_array_hits[x]);
-    // }
 
     // return column_array_hits;
 
+    /*
+        -------------Zones----------------
+    */
+
+    // store each cells zone in an array
+    array<int, 9> zones;
+    // Get zone id's for each rows cell
+    for(int x = 0; x < 9; x++){
+        int zone = get_zone(row_positions[x].first, row_positions[x].second);
+        zones[x] = (zone);
+    }
+    // Store vectors of zone numbers in array
+    array<vector<int>, 9> zone_array_numbers;
+    // Get zone numbers related to each rows cell
+    for(int x = 0; x < 9; x++){
+        vector<int> zone_numbers = get_zone_numbers(zones[x]);
+        zone_array_numbers[x] = (zone_numbers);
+    }
+
+    // Other zone data
+    // array<vector<pair<int, int>>, 9> zone_array_positions;
+    // for(int x = 0; x < 9; x++){
+    //     vector<pair<int, int>> zone_positions = get_zone_positions(zones[x]);
+    //     zone_array_positions[x] = (zone_positions);
+    // }
+
+    // vector<int> zone_missing = get_missing_numbers(zone_array_numbers[0]);
+
+    array<vector<int>, 9> zone_hit_values;
+    // Filter zone number data - return vectors clashing numbers
+    for(size_t y = 0; y < row_missing.size(); y++){
+        for(int x = 0; x < 9; x++){
+            if(row_numbers[x] == 0){
+                vector<int> cross_compare_value = cross_compare_zone(zone_array_numbers[x], row_missing[y]);
+                zone_hit_values[x] = (cross_compare_value);
+            } else { zone_hit_values[x].push_back(0); }
+        }
+    }
+
+    // Pass the row positions, to get zone positions
+
+    // array<vector<int>, 9> zone_array_hits;
+    // // Pushing missing numbers to relevant global column(cell)
+    // for(size_t x = 0; x < zone_hit_values.size(); x++){
+    //     if(zone_hit_values[x] != 0){
+    //         int column = (x % 9); // get column(cell) number
+    //         int hit_value = zone_hit_values[x]; // get the value hit
+    //         zone_array_hits[column].push_back(hit_value); // push value to relevant columm
+    //         global_array_hits[column].push_back(hit_value); // push value to relevant columm
+    //     }
+    // }
+
+    // Prints the hit values
+    // std::cout << "Hit values per column global:\n\n";
+    // for(int x = 0; x < 9; x++){
+    //     print_vector(global_array_hits[x]);
+    // }
+
+    print_vector(row_missing);
+
+    for(int x = 0; x < 9; x++){
+        // print_vector(zone_array_numbers[x]);
+        // print_vector(column_array_hits[x]);
+        // print_vector(zone_array_hits[x]);
+    }
+
+
+    /*
+        -------------Empty----------------
+    */
 
     // Call get_empty_cells(vector<int> row_numbers)
     // Returns which row cells are empty, may not be needed, just separate out
@@ -81,6 +156,13 @@ void get_row_hits(int row){
         if(row_numbers[x] == 0) { empty_rows.push_back(x); }
     }
 
+    // return empty_rows;
+
+
+
+    /*
+        -------------Solve----------------
+    */
 
     // Call get_possible_values(vector<int> &missing_numbers, array<vector<int>, 9> hits)
     // Returns possible numbers for each cell - rename func to get possible or somtn ^
@@ -104,10 +186,9 @@ void solve_temp(vector<int> &missing_numbers, vector<pair<int, int>> positions, 
         }
     }
 
-    for(int x = 0; x < 9; x++){
-        //print_vector(hits[x]);
-        print_vector(possible[x]);
-    }
+    // for(int x = 0; x < 9; x++){
+    //     print_vector(possible[x]);
+    // }
     // return possible;
 
 
@@ -119,7 +200,7 @@ void solve_temp(vector<int> &missing_numbers, vector<pair<int, int>> positions, 
         if(possible[x].size() == 1){ 
             Sudoku::add_number(positions[x].first, positions[x].second, possible[x][0]); 
         }
-    } print_puzzle();
+    } // print_puzzle();
 
     // int probability = 100/possible[2].size();
     // if(probability == 100){ 
@@ -128,7 +209,7 @@ void solve_temp(vector<int> &missing_numbers, vector<pair<int, int>> positions, 
 }
 
 // Call from row seek, takes a column(for current row) and compares against a compare_value, needs 1-9 iteration
-int cross_compare_columns(int column, int compare_value, int iteration){
+int cross_compare_columns(int column, int compare_value){
 
     vector<int> column_numbers = get_column_numbers(column);
     vector<pair<int, int>> column_positions = get_column_positions(column);
@@ -147,74 +228,19 @@ int cross_compare_columns(int column, int compare_value, int iteration){
 }
 
 // Check zone with the compare_value
-void cross_compare_zone(int position_y, int position_x, int compare_value){
+vector<int> cross_compare_zone(vector<int> zone_vector_numbers, int compare_value){
 
-    int zone = get_zone(position_y, position_x);
-    vector<int> zone_numbers = get_zone_numbers(zone);
-    vector<pair<int, int>> zone_positions = get_zone_positions(zone);
-    vector<int> zone_missing =get_missing_numbers(zone_numbers);
+    // Necessary for binary search -c-
+    std::sort(zone_vector_numbers.begin(), zone_vector_numbers.end());
 
-    if(std::binary_search(zone_numbers.begin(), zone_numbers.end(), compare_value)){
-        std::cout << "Found: " << compare_value << std::endl;
+    vector<int> values_hit;
+
+    if(std::binary_search(zone_vector_numbers.begin(), zone_vector_numbers.end(), compare_value)){
+        std::cout << "hit: " << compare_value << std::endl;
+        //values_hit.push_back(compare_value); 
+    } else{ std::cout << "0" << std::endl; 
+        //values_hit.push_back(0); 
     }
+
+    return values_hit;
 }
-
-// void column_seek(int column){
-
-//     std::cout << "Column:" << std::endl;
-
-//     vector<int> column_numbers = get_column_numbers(column);
-//     vector<pair<int, int>> column_positions = get_column_positions(column);
-//     vector<int> column_missing = get_missing_numbers(column_numbers);
-
-//     print_vector(column_numbers);
-//     print_vector_pairs(column_positions);
-// }
-
-
-// // Call from column seek, takes a columns rows and compare with the compare_value
-// void cross_compare_rows(int row, int compare_value){
-
-//     vector<int> row_numbers = get_column_numbers(row);
-//     vector<pair<int, int>> column_positions = get_column_positions(row);
-
-//     std::sort(row_numbers.begin(), row_numbers.end());
-
-//     // Find if missing value 
-//     if(std::binary_search(row_numbers.begin(), row_numbers.end(), compare_value)){
-//         std::cout << "Found: " << compare_value << std::endl;
-//     }
-// }
-
-// This is a state, ideally each missing number is in a state of being or not being per cell
-// When a number for sure cant be in a spot this should be stored
-// void check_deduction(){
-
-// }
-
-// void num_check(int row, int column){
-
-//     std::cout << "Row:" << std::endl;
-
-//     vector<int> row_numbers = get_row_numbers(row);
-//     vector<pair<int, int>> row_positions = get_row_positions(row);
-//     vector<int> row_missing = get_missing_numbers(row_numbers);
-
-//     std::cout << "Column:" << std::endl;
-
-//     vector<int> column_numbers = get_column_numbers(column);
-//     vector<pair<int, int>> column_positions = get_column_positions(column);
-//     vector<int> column_missing = get_missing_numbers(column_numbers);
-
-//     print_vector(row_numbers);
-
-//     // Run a compare on all missing numbers
-//     for(size_t x = 0; x < row_missing.size(); x++){
-//         cross_column_compare(row_positions[0].second, row_missing[x]);
-//         cross_row_compare(row_positions[0].first, row_missing[x]);
-//         cross_zone_compare(row_positions[0].first, row_positions[0].second, row_missing[x]);
-//     } endline;
-
-//     print_vector(row_missing);
-    
-// }
