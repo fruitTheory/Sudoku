@@ -46,16 +46,9 @@ vector<int> get_column_numbers(int column);
 // Gets column positions and return a vector, columns start at 0
 vector<pair<int, int>> get_column_positions(int column);
 
-void solve(Sudoku &sudoku, vector<int> &missing_numbers, vector<pair<int, int>> position);
-
 /* Find and sort missing numbers from 'available numbers' and return a vector missing of numbers
 Should be used in conjunction with functions that store available numbers into a vector */
 vector<int> get_missing_numbers(vector<int> available_numbers);
-
-// // Check which column has least missing numbers, return the column number
-// void compare_columns();
-// // Check which row has least missing numbers, return the row number
-// void compare_rows();
 
 // Make puzzle for faster copy paste
 // Can take user input or hardcode puzzle key here

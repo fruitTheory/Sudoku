@@ -16,7 +16,7 @@ array<array<int, 9>, 9> Sudoku::puzzle = {{
     { 0, 2, 8, 5, 1, 0, 7, 0, 4, },
     { 1, 0, 0, 8, 2, 3, 9, 0, 0, },
     { 0, 0, 0, 7, 5, 0, 1, 2, 8, },
-    { 0, 0, 4, 0, 0, 9, 0, 0, 0, },
+    { 0, 0, 4, 0, 9, 0, 0, 0, 0, },
     { 6, 0, 2, 0, 4, 8, 3, 5, 1, },
     { 0, 3, 0, 0, 7, 0, 4, 0, 0, },
     { 0, 0, 9, 0, 0, 0, 2, 8, 0, },
@@ -73,13 +73,6 @@ vector<pair<int, int>> get_column_positions(int column){
     return column_coords;
 }
 
-void solve(Sudoku &sudoku, vector<int> &missing_numbers, vector<pair<int, int>> position){
-    int probability = 100/missing_numbers.size();
-    std::cout << 100/missing_numbers.size(); endline;
-    std::cout << missing_numbers[0]; endline;
-    if(probability == 100){ sudoku.add_number(position[0].first, position[0].second, missing_numbers[0]); }
-}
-
 /* Find and sort missing numbers from 'available numbers' and return a vector missing of numbers
 Should be used in conjunction with functions that store available numbers into a vector */
 vector<int> get_missing_numbers(vector<int> available_numbers){
@@ -129,7 +122,7 @@ void make_puzzle(){
 
     // Easy
     user_input =
-    "400307600003002800028510704100823900000750128004009000602048351030070400009000280";
+    "400307600003002800028510704100823900000750128004090000602048351030070400009000280";
 
     std::cout << "array<array<int, 9>, 9> puzzle = {{" << std::endl;
     for(size_t x = 0; x < user_input.size(); x++){
@@ -157,29 +150,3 @@ grid[6][0] grid[6][1] grid[6][2]  etc..
 grid[7][0] grid[7][1] grid[7][2]  
 grid[8][0] grid[8][1] grid[8][2]
 */
-
-// // Cycles through empty spots in a column, does a cross check for each, meant for single column
-// void column_crosscheck(vector<int> &availabe_numbers, vector<int> &missing_numbers, int column){
-    
-//     array<vector<int>, 9> puzzle_rows;
-
-//     // Store vectors of rows into array
-//     for(int x = 0; x < 9; x++){
-//         std::cout << Sudoku::puzzle[x][column] << " ";
-//         puzzle_rows[x] = get_row_numbers(x);
-//     } endline;
-
-//     // Read vectors from array
-//     for(int x = 0; x < 9; x++){
-//         vector<int> current_vector = puzzle_rows[x];
-//         for(int value: current_vector){
-//             std::cout << value;
-//         } endline;
-//     } endline;
-
-// }
-
-// // Check which column has least missing numbers, return the column number
-// void compare_columns(){}
-// // Check which row has least missing numbers, return the row number
-// void compare_rows(){}

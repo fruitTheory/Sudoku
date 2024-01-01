@@ -106,8 +106,7 @@ void get_row_hits(int row){
             int cross_compare_value = cross_compare_zone(zone_array_numbers[x], row_missing[y]);
             zone_hit_values.push_back(cross_compare_value);
         }
-    } print_vector(zone_hit_values);
-
+    } // print_vector(zone_hit_values);
 
     array<vector<int>, 9> zone_array_hits;
     // Pushing missing numbers to relevant global column(cell)
@@ -123,12 +122,12 @@ void get_row_hits(int row){
     }
 
     // Prints the hit values
-    std::cout << "Hit values per column global:\n\n";
-    for(int x = 0; x < 9; x++){
-        print_vector(global_array_hits[x]);
-    }
+    // std::cout << "Hit values per column global:\n\n";
+    // for(int x = 0; x < 9; x++){
+    //     print_vector(global_array_hits[x]);
+    // }
 
-    print_vector(row_missing);
+    // print_vector(row_missing);
 
     for(int x = 0; x < 9; x++){
         // print_vector(zone_array_numbers[x]);
@@ -151,17 +150,17 @@ void get_row_hits(int row){
     // return empty_rows;
 
 
-
     /*
         -------------Solve----------------
     */
 
     // Call get_possible_values(vector<int> &missing_numbers, array<vector<int>, 9> hits)
     // Returns possible numbers for each cell - rename func to get possible or somtn ^
-    solve_temp(row_missing, row_positions, column_array_hits);
+    solve_temp(row_missing, row_positions, global_array_hits);
     
 }
 
+int num = 0;
 void solve_temp(vector<int> &missing_numbers, vector<pair<int, int>> positions, array<vector<int>, 9> hits){
 
     // print_vector(missing_numbers);
@@ -178,21 +177,26 @@ void solve_temp(vector<int> &missing_numbers, vector<pair<int, int>> positions, 
         }
     }
 
-    // for(int x = 0; x < 9; x++){
-    //     print_vector(possible[x]);
-    // }
+    for(int x = 0; x < 9; x++){
+        print_vector(possible[x]);
+    }
     // return possible;
 
 
     // Call solve(array<vector<int>, 9> possible)
     // std::cout << "test: " << possible[2][1]; endline;
-
+    print_puzzle();
     // If only one possible value, add to board
     for(int x = 0; x < 9; x++){
         if(possible[x].size() == 1){ 
             Sudoku::add_number(positions[x].first, positions[x].second, possible[x][0]); 
+            //std::cout << possible[x][0] << std::endl;
         }
-    } // print_puzzle();
+    } print_puzzle();
+
+    // if(num == 0){
+    // get_row_hits(2);}
+    // num++;
 
     // int probability = 100/possible[2].size();
     // if(probability == 100){ 
@@ -230,7 +234,8 @@ int cross_compare_zone(vector<int> zone_vector_numbers, int compare_value){
     if(std::binary_search(zone_vector_numbers.begin(), zone_vector_numbers.end(), compare_value)){
         // std::cout << "hit: " << compare_value << std::endl;
         values_hit = compare_value; 
-    } else{ // std::cout << "0" << std::endl; 
+    } else{
+        // std::cout << "0" << std::endl; 
         values_hit = (0); 
     }
 

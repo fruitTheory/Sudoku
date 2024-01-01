@@ -13,13 +13,10 @@ int main(){
     grid.x = 0; grid.y = 0;
     column = 0; row = 1; // endline;
 
-    // zone_seek(grid);
-    // std::cout << "-------------------------" << std::endl;
-    // column_seek(column);
-    // std::cout << "-------------------------" << std::endl;
-    get_row_hits(row);
+    // for(int x = 0; x < 9; x++){
+        get_row_hits(row);
+    // }
     
-
     return EXIT_SUCCESS;
 
 }
