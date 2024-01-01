@@ -11,7 +11,7 @@ int main(){
     Grid grid;
     int column, row;
     grid.x = 0; grid.y = 0;
-    column = 0; row = 0; // endline;
+    column = 0; row = 1; // endline;
 
     // zone_seek(grid);
     // std::cout << "-------------------------" << std::endl;
