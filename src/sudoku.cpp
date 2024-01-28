@@ -1,4 +1,5 @@
-#include "Sudoku.hpp"
+#include "sudoku.hpp"
+#include "sudoku_utility.hpp"
 #include "config.hpp"
 #include <iostream>
 #include <array>
@@ -22,11 +23,24 @@ array<array<int, 9>, 9> Sudoku::puzzle = {{
     { 0, 0, 9, 0, 0, 0, 2, 8, 0, },
 }};
 
+array<array<int, 9>, 9> Sudoku::puzzle_status;
+
+// Set filled cells in puzzle to 1, rest will remain 0
+void Sudoku::set_puzzle_status(){
+
+    for(size_t x = 0; x < (Sudoku::puzzle.size() * 9); x++){
+        if(!Sudoku::puzzle_status[0][x] == 0){
+            Sudoku::puzzle_status[0][x] = 1;
+        }
+    }
+
+}
+
 // Store current puzzle into a vector
 vector<int> puzzle_to_vector(){
     vector<int> puzzle_numbers;
     // Interestingly due to how arrays stored this will loop through
-    for(size_t x = 0; x < (Sudoku::puzzle.size()); x++){
+    for(size_t x = 0; x < (Sudoku::puzzle.size() * 9); x++){
         puzzle_numbers.push_back(Sudoku::puzzle[0][x]);
     }
 

@@ -8,13 +8,29 @@
 int main(){
 
     Sudoku sudoku;
-    Grid grid;
-    int column, row;
-    grid.x = 0; grid.y = 0;
-    column = 0; row = 1; // endline;
 
-    // for(int x = 0; x < 9; x++){
-        get_row_hits(row);
+    Grid grid;
+    grid.x = 0; grid.y = 0;
+
+    int column, row;
+    column = 0; row = 2;
+
+    sudoku.init_puzzle_status();
+
+    std::cout << "status start \n";
+    print_puzzle_status();
+    std::cout << "status end \n";
+
+    for(int x = 0; x < 9; x++){
+        sudoku.push_cycle();
+    }
+
+    int cycles = sudoku.get_cycles();
+    std::cout << cycles << std::endl;
+
+
+    // for(int row = 0; row < 9; row++){
+        // get_row_hits(row);
     // }
     
     return EXIT_SUCCESS;

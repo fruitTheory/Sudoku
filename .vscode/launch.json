@@ -8,7 +8,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/bin/main.exe",
             //"args": [""],
-            "preLaunchTask": "mingw32-make",
+            "preLaunchTask": "make",
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

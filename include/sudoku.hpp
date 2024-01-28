@@ -7,21 +7,34 @@ using std::vector;
 using std::array;
 using std::pair;
 
+#include <iostream>
+
 class Sudoku{
     private:
+        void init_status(){
+            Sudoku::puzzle_status = Sudoku::puzzle;
+            set_puzzle_status();
+        }
+
+        int cycles = 0;
 
     public:
 
         void run();
 
+        inline void push_cycle(){ ++cycles; };
+        inline int get_cycles(){ return cycles; }
+
         static array<array<int, 9>, 9> puzzle;
+        static array<array<int, 9>, 9> puzzle_status;
 
         static inline void add_number(int y, int x, int number){
-            // Provide Col-y and Row-x to update puzzle with a number
+            // Col-y and Row-x to update puzzle with a number
             Sudoku::puzzle[y][x] = number;
         }
 
-        int column, row;
+        void set_puzzle_status();
+        void init_puzzle_status(){ Sudoku::init_status(); }
 
 };
 

@@ -3,9 +3,9 @@
     "tasks": [
 
         {
-            "label": "mingw32-make",
+            "label": "make",
             "type": "shell",
-            "command": "mingw32-make",
+            "command": "make",
             "group": {
                 "kind": "build",
                 "isDefault": true

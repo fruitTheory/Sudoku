@@ -12,18 +12,11 @@ using std::pair;
 
 
 void zone_seek(int position_y, int position_x){
-
-    // std::cout << "Zone:" << std::endl;
-
     int zone = get_zone(position_y, position_x);
     vector<int> zone_numbers = get_zone_numbers(zone);
     vector<pair<int, int>> zone_positions = get_zone_positions(zone);
     vector<int> zone_missing = get_missing_numbers(zone_numbers);
-
-    print_zone_numbers(zone_numbers, zone);
-    print_vector_pairs(zone_positions);
 }
-
 
 void get_row_hits(int row){
 
@@ -84,31 +77,37 @@ void get_row_hits(int row){
 
     // store each cells zone in an array
     array<int, 9> zones;
+
     // Get zone id's for each rows cell
     for(int x = 0; x < 9; x++){
         int zone = get_zone(row_positions[x].first, row_positions[x].second);
         zones[x] = (zone);
     }
+
+
     // Store vectors of zone numbers in array
     array<vector<int>, 9> zone_array_numbers;
+
     // Get zone numbers related to each rows cell
     for(int x = 0; x < 9; x++){
         vector<int> zone_numbers = get_zone_numbers(zones[x]);
         zone_array_numbers[x] = (zone_numbers);
     }
 
-    // vector<pair<int, int>> zone_positions = get_zone_positions(zones[x]);
-
+    // Store vectors of zone hits, which values already exist relative to position
     vector<int> zone_hit_values;
+
     // Filter zone number data - return vectors clashing numbers
     for(size_t y = 0; y < row_missing.size(); y++){
         for(int x = 0; x < 9; x++){
             int cross_compare_value = cross_compare_zone(zone_array_numbers[x], row_missing[y]);
             zone_hit_values.push_back(cross_compare_value);
         }
-    } // print_vector(zone_hit_values);
+    }
 
+    // Store the hits of each array into relevant column
     array<vector<int>, 9> zone_array_hits;
+
     // Pushing missing numbers to relevant global column(cell)
     for(size_t x = 0; x < zone_hit_values.size(); x++){
         if(zone_hit_values[x] != 0){
@@ -127,14 +126,14 @@ void get_row_hits(int row){
     //     print_vector(global_array_hits[x]);
     // }
 
+    // print_vector_pairs(row_positions);
     // print_vector(row_missing);
 
-    for(int x = 0; x < 9; x++){
+    // for(int x = 0; x < 9; x++){
         // print_vector(zone_array_numbers[x]);
         // print_vector(column_array_hits[x]);
         // print_vector(zone_array_hits[x]);
-    }
-
+    // }
 
     /*
         -------------Empty----------------
@@ -163,10 +162,9 @@ void get_row_hits(int row){
 int num = 0;
 void solve_temp(vector<int> &missing_numbers, vector<pair<int, int>> positions, array<vector<int>, 9> hits){
 
-    // print_vector(missing_numbers);
     array<vector<int>, 9> possible;
 
-    // Loop and add possibilites to vector, should be opposite of hits vector
+    // Loop and add possibilites to grid array, should be opposite of hits vector
     for(size_t y = 0; y < missing_numbers.size(); y++){
         int compare_value = missing_numbers[y];
         // std::cout << "compare value: " << compare_value << " \n";
@@ -177,31 +175,25 @@ void solve_temp(vector<int> &missing_numbers, vector<pair<int, int>> positions, 
         }
     }
 
+    // return possible;
+
     for(int x = 0; x < 9; x++){
         print_vector(possible[x]);
     }
-    // return possible;
 
-
-    // Call solve(array<vector<int>, 9> possible)
-    // std::cout << "test: " << possible[2][1]; endline;
     print_puzzle();
-    // If only one possible value, add to board
+
+    // WHEN SOLVING NEED WHICH CELLS ARE ALREADY FILLED array_cell[x].second
+    // So extras that equal size == 1 dont also get a number, then can iterate with updated board in main
+
     for(int x = 0; x < 9; x++){
         if(possible[x].size() == 1){ 
             Sudoku::add_number(positions[x].first, positions[x].second, possible[x][0]); 
             //std::cout << possible[x][0] << std::endl;
         }
-    } print_puzzle();
+    } 
+    print_puzzle();
 
-    // if(num == 0){
-    // get_row_hits(2);}
-    // num++;
-
-    // int probability = 100/possible[2].size();
-    // if(probability == 100){ 
-    //     Sudoku::add_number(positions[2].first, positions[2].second, possible[2][0]); 
-    // }
 }
 
 // Call from row seek, takes a column(for current row) and compares against a compare_value, needs 1-9 iteration
