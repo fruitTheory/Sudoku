@@ -173,7 +173,7 @@ void solve_row(vector<int> &missing_numbers, vector<pair<int, int>> positions, a
         if(possible[x].size() == 1){ 
             Sudoku::add_number(positions[x].first, positions[x].second, possible[x][0]); 
             std::cout << "Cycle: " << Sudoku::cycles << std::endl;
-            break;
+            // break;
         }
     }
 
