@@ -7,9 +7,9 @@ Features
 - Can complete easy to hard puzzles  
 
 Future
-- Implement stronger algorithm expert
+- Implement stronger algorithm
 - Make a visual board
 - Take puzzle input  
 
 --  
-<img src="./img/solve_hard.jpg" alt="Board Solve" style="width: 30%; height: 25%;"> 
+<img src="./img/Solve_hard.jpg" alt="Board Solve" style="width: 30%; height: 25%;"> 
