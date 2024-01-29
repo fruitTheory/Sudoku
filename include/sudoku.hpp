@@ -7,35 +7,20 @@ using std::vector;
 using std::array;
 using std::pair;
 
-// Later consier making puzzle private and have public methods to interact
 
 class Sudoku{
     private:
-        void init_status(){
-            Sudoku::puzzle_status = Sudoku::puzzle;
-            set_puzzle_status();
-        }
 
     public:
 
-        // Sudoku();
-
-        void run();
-
         static int cycles;
         inline void push_cycle(){ ++cycles; };
-        //inline int get_cycles(){ return cycles; }
 
         static array<array<int, 9>, 9> puzzle;
-        static array<array<int, 9>, 9> puzzle_status;
 
         static inline void add_number(int y, int x, int number){
             Sudoku::puzzle[y][x] = number;
         }
-
-        void set_puzzle_status();
-        void init_puzzle_status(){ Sudoku::init_status(); }
-
 };
 
 // Position on grid (x, y)

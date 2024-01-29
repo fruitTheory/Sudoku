@@ -1,7 +1,11 @@
 # Sudoku
 
-Currently a foundation for a Sudoku solver. Started with a basic custom solver but needs alot of work or just implement backtrace instead. 
+A Sudoku puzzle solver. Designed with a custom solver. May implement backtrace for harder puzzles. 
 
-Could do..
-- Finish Solver
-- Make visual board
+Features
+- Custom algorithm
+- Can complete easy to hard puzzles  
+
+Future
+- Implement stronger algorithm
+- Make a visual board

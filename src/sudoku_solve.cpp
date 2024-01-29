@@ -1,4 +1,4 @@
-#include "sudoku_seek.hpp"
+#include "sudoku_solve.hpp"
 #include "sudoku.hpp"
 #include "sudoku_utility.hpp"
 #include "sudoku_zones.hpp"
@@ -11,29 +11,22 @@ using std::vector;
 using std::pair;
 
 
-void zone_seek(int position_y, int position_x){
-    int zone = get_zone(position_y, position_x);
-    vector<int> zone_numbers = get_zone_numbers(zone);
-    vector<pair<int, int>> zone_positions = get_zone_positions(zone);
-    vector<int> zone_missing = get_missing_numbers(zone_numbers);
-}
+// Basic solver that takes row as input
+void row_algorithm(int row){
 
-void get_row_hits(int row){
+    // Keep row in arr bounds 0-8
+    if(row > 8){ row %= 9; }
 
     /*
-        -------------Row Data----------------
+        -------------Row Datas----------------
     */
-
-   // Keep row in bounds 0-8
-   if(row > 8){ row %= 9; }
-
-    // std::cout << "Row:" << std::endl;
 
     vector<int> row_numbers = get_row_numbers(row);
     vector<pair<int, int>> row_positions = get_row_positions(row);
     vector<int> row_missing = get_missing_numbers(row_numbers);
 
     // print_vector(row_numbers);
+    // print_vector(row_missing);
     
     vector<int> hit_values;
 
@@ -43,39 +36,33 @@ void get_row_hits(int row){
             if(row_numbers[x] == 0){
                 // loop through each row, passing along each missing number to compare
                 int cross_compare_value = cross_compare_columns(row_positions[x].second, row_missing[y]);
+                // std::cout << "Missing: " << row_missing[y] << std::endl;
                 hit_values.push_back(cross_compare_value);
             } else { hit_values.push_back(0); }
         }
     }
 
-    // return hit_values;
-
+    // print_vector(hit_values);
 
     /*
         -------------Column Hits----------------
     */
 
     array<vector<int>, 9> global_array_hits;
-
-    // Call column_crosscheck(vector<int> hit_values)
-    array<vector<int>, 9> column_array_hits;
-    // A hit is a (missing number that exists in that row)
-    // Will check columns that cross row cell for hits
+    //array<vector<int>, 9> column_array_hits;
 
     // Note: size of vector should always be divisable by 9
     for(size_t x = 0; x < hit_values.size(); x++){
         if(hit_values[x] != 0){
             int column = (x % 9); // get column(cell) number
             int hit_value = hit_values[x]; // get the value hit
-            column_array_hits[column].push_back(hit_value); // push value to relevant columm
+            //column_array_hits[column].push_back(hit_value); // push value to relevant columm
             global_array_hits[column].push_back(hit_value); // push value to relevant columm
         }
     }
 
-    // return column_array_hits;
-
     /*
-        -------------Zones----------------
+        -------------Zone Hits----------------
     */
 
     // store each cells zone in an array
@@ -123,15 +110,16 @@ void get_row_hits(int row){
         }
     }
 
+    /*
+        -------------Debug----------------
+    */
     // Prints the hit values
     // std::cout << "Hit values per column global:\n\n";
     // for(int x = 0; x < 9; x++){
     //     print_vector(global_array_hits[x]);
     // }
-
     // print_vector_pairs(row_positions);
     // print_vector(row_missing);
-
     // for(int x = 0; x < 9; x++){
         // print_vector(zone_array_numbers[x]);
         // print_vector(column_array_hits[x]);
@@ -139,25 +127,9 @@ void get_row_hits(int row){
     // }
 
     /*
-        -------------Empty----------------
-    */
-
-    // Call get_empty_cells(vector<int> row_numbers)
-    // Returns which row cells are empty, may not be needed, just separate out
-    vector<int> empty_rows;
-    for(int x = 0; x < 9; x++){
-        if(row_numbers[x] == 0) { empty_rows.push_back(x); }
-    }
-
-    // return empty_rows;
-
-
-    /*
         -------------Solve----------------
     */
 
-    // Call get_possible_values(vector<int> &missing_numbers, array<vector<int>, 9> hits)
-    // Returns possible numbers for each cell - rename func to get possible or somtn ^
     solve_row(row_missing, row_positions, global_array_hits);
     
 }
@@ -167,31 +139,28 @@ void solve_row(vector<int> &missing_numbers, vector<pair<int, int>> positions, a
     array<vector<int>, 9> possible;
 
     int cycles = Sudoku::cycles;
-    // std::cout << "cycles: " << cycles << std::endl;
 
     // Loop and add possibilites to grid array, should be opposite of hits vector
     for(size_t y = 0; y < missing_numbers.size(); y++){
         int compare_value = missing_numbers[y];
-        // std::cout << "compare value: " << compare_value << " \n";
+        //std::cout << "compare value: " << compare_value << " \n";
         for(int x = 0; x < 9; x++){
             int count = std::count(hits[x].begin(), hits[x].end(), compare_value);
             // If its not count that means its possible for that cell - push back
             if(!count){ possible[x].push_back(compare_value); }
-            // std::cout << count << " \n";
+            //std::cout << count << " \n";
         }
     }
 
-    // return possible;
-
+    // Using cycles to get current row
     if(cycles > 8){ cycles %= 9; }
-    // std::cout << "cycles: " << cycles << std::endl;
 
-    // Clear cells that already have numbers
+    // Clear cell vectors that already have a number in puzzle
     for(int x = 0; x < 9; x++){
-        if(Sudoku::puzzle_status[cycles][x] == 1){
+        if(Sudoku::puzzle[cycles][x] != 0){
             possible[x].clear();
         }
-    } 
+    }
 
     // for(int x = 0; x < 9; x++){
     //     print_vector(possible[x]);
@@ -203,14 +172,36 @@ void solve_row(vector<int> &missing_numbers, vector<pair<int, int>> positions, a
     for(int x = 0; x < 9; x++){
         if(possible[x].size() == 1){ 
             Sudoku::add_number(positions[x].first, positions[x].second, possible[x][0]); 
-            std::cout << possible[x][0] << std::endl;
             std::cout << "Cycle: " << Sudoku::cycles << std::endl;
+            break;
         }
     }
 
     std::cout << "Puzzle after: " << std::endl;
     print_puzzle();
 
+}
+
+// Check if puzzle is solved, will return 1 on solve and 0 if not
+int is_solved(){
+
+    int solved = 0;
+    size_t puzzle_size = Sudoku::puzzle.size();
+    puzzle_size *= puzzle_size;
+
+    for(size_t x = 0; x < puzzle_size; x++){
+        int value = Sudoku::puzzle[0][x];
+        if(value == 0){
+            solved = 0;
+            break;
+        } else { solved = 1; }
+    }
+
+    if(solved){
+        std::cout << "Solved after: " << Sudoku::cycles << " iterations" << std::endl; endline;
+    }
+
+    return solved;
 }
 
 // Call from row seek, takes a column(for current row) and compares against a compare_value, needs 1-9 iteration

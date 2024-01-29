@@ -29,15 +29,6 @@ void print_puzzle(){
     } endline;
 }
 
-// Prints puzzle status in a grid pattern
-void print_puzzle_status(){
-    for(int y = 0; y < 9; y++){
-        for(int x = 0; x < 9; x++){
-            std::cout << Sudoku::puzzle_status[y][x] << " ";
-        } endline;
-    }
-}
-
 // Prints any pair vector supplied
 void print_vector_pairs(std::vector<std::pair<int, int>> &numbers){
     std::cout << "Vector positions: " << std::endl;

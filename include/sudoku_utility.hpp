@@ -11,7 +11,6 @@ void print_puzzle_column(int column);
 
 // Prints whole puzzle in a grid pattern
 void print_puzzle();
-void print_puzzle_status();
 
 // Prints any vector/array supplied
 template<typename T>

@@ -3,7 +3,7 @@ FLAGS = -g -Wall -Wextra -Wno-unused-parameter -fdiagnostics-color=always
 LIBRARY_DIR ?=
 LINKED_LIBRARIES =
 
-SRC = main.cpp sudoku.cpp sudoku_utility.cpp sudoku_seek.cpp sudoku_zones.cpp
+SRC = main.cpp sudoku.cpp sudoku_utility.cpp sudoku_solve.cpp sudoku_zones.cpp
 OBJECTS = $(SRC:%.cpp=$(BUILD)%.o)
 
 BUILD = ./build/
