@@ -24,6 +24,9 @@ void get_row_hits(int row){
         -------------Row Data----------------
     */
 
+   // Keep row in bounds 0-8
+   if(row > 8){ row %= 9; }
+
     // std::cout << "Row:" << std::endl;
 
     vector<int> row_numbers = get_row_numbers(row);
@@ -114,9 +117,9 @@ void get_row_hits(int row){
             int column = (x % 9); // get column(cell) number
             int hit_value = zone_hit_values[x]; // get the value hit
             zone_array_hits[column].push_back(hit_value); // push value to relevant columm
-            if(std::find(global_array_hits[column].begin(), // check for duplicates
+            if(std::find(global_array_hits[column].begin(), // if no duplicates
             global_array_hits[column].end(), hit_value) == global_array_hits[column].end()){
-            global_array_hits[column].push_back(hit_value); } // push value to relevant columm
+            global_array_hits[column].push_back(hit_value); } // push value to relevant global columm
         }
     }
 
@@ -155,14 +158,16 @@ void get_row_hits(int row){
 
     // Call get_possible_values(vector<int> &missing_numbers, array<vector<int>, 9> hits)
     // Returns possible numbers for each cell - rename func to get possible or somtn ^
-    solve_temp(row_missing, row_positions, global_array_hits);
+    solve_row(row_missing, row_positions, global_array_hits);
     
 }
 
-int num = 0;
-void solve_temp(vector<int> &missing_numbers, vector<pair<int, int>> positions, array<vector<int>, 9> hits){
+void solve_row(vector<int> &missing_numbers, vector<pair<int, int>> positions, array<vector<int>, 9> hits){
 
     array<vector<int>, 9> possible;
+
+    int cycles = Sudoku::cycles;
+    // std::cout << "cycles: " << cycles << std::endl;
 
     // Loop and add possibilites to grid array, should be opposite of hits vector
     for(size_t y = 0; y < missing_numbers.size(); y++){
@@ -170,6 +175,7 @@ void solve_temp(vector<int> &missing_numbers, vector<pair<int, int>> positions, 
         // std::cout << "compare value: " << compare_value << " \n";
         for(int x = 0; x < 9; x++){
             int count = std::count(hits[x].begin(), hits[x].end(), compare_value);
+            // If its not count that means its possible for that cell - push back
             if(!count){ possible[x].push_back(compare_value); }
             // std::cout << count << " \n";
         }
@@ -177,21 +183,32 @@ void solve_temp(vector<int> &missing_numbers, vector<pair<int, int>> positions, 
 
     // return possible;
 
+    if(cycles > 8){ cycles %= 9; }
+    // std::cout << "cycles: " << cycles << std::endl;
+
+    // Clear cells that already have numbers
     for(int x = 0; x < 9; x++){
-        print_vector(possible[x]);
-    }
+        if(Sudoku::puzzle_status[cycles][x] == 1){
+            possible[x].clear();
+        }
+    } 
 
+    // for(int x = 0; x < 9; x++){
+    //     print_vector(possible[x]);
+    // }
+
+    std::cout << "Puzzle before: " << std::endl;
     print_puzzle();
-
-    // WHEN SOLVING NEED WHICH CELLS ARE ALREADY FILLED array_cell[x].second
-    // So extras that equal size == 1 dont also get a number, then can iterate with updated board in main
 
     for(int x = 0; x < 9; x++){
         if(possible[x].size() == 1){ 
             Sudoku::add_number(positions[x].first, positions[x].second, possible[x][0]); 
-            //std::cout << possible[x][0] << std::endl;
+            std::cout << possible[x][0] << std::endl;
+            std::cout << "Cycle: " << Sudoku::cycles << std::endl;
         }
-    } 
+    }
+
+    std::cout << "Puzzle after: " << std::endl;
     print_puzzle();
 
 }

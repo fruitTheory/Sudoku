@@ -12,44 +12,21 @@ int main(){
     Grid grid;
     grid.x = 0; grid.y = 0;
 
-    int column, row;
-    column = 0; row = 2;
+    int column, row_iter;
+    column = 0; row_iter = 2;
 
     sudoku.init_puzzle_status();
 
-    std::cout << "status start \n";
-    print_puzzle_status();
-    std::cout << "status end \n";
-
-    for(int x = 0; x < 9; x++){
+    for(int row_iter = 0; row_iter < 15; row_iter++){
+        get_row_hits(row_iter);
         sudoku.push_cycle();
+        sudoku.set_puzzle_status();
+        //if(sudoku.get_cycles() % 9 == 0){ 
+        //     vector p = puzzle_to_vector();
+        //     store_puzzle(p); 
+        // }
     }
-
-    int cycles = sudoku.get_cycles();
-    std::cout << cycles << std::endl;
-
-
-    // for(int row = 0; row < 9; row++){
-        // get_row_hits(row);
-    // }
     
     return EXIT_SUCCESS;
 
 }
-
-/*
-
-For each missing cell from avaiable numbers, check if first(1) missing number can be put in 
-Check if it doesnt clash with the zone of current available numbers position 
-Check if it doesnt clash with basic crosscheck then add it to a possibility vector
-Then, if theres multiple possibilites in the vector, do a second crosscheck
-This one with -1+1 neighbor columns/rows, to get probabilites
-If the missing it found in neighbor cross checks, increase the probability
-Then simply add the highest probable number in that slot
-After this can implement backtrack method, for finalized solutions
-
-For each time it gets a solution print new Board to file(debug)
-
-Answers can come from deduction, as in other spots for sure cant be x missing number
-
-*/
