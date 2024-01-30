@@ -18,16 +18,13 @@ void row_algorithm(int row){
     if(row > 8){ row %= 9; }
 
     /*
-        -------------Row Datas----------------
+        -------------Row Data----------------
     */
 
     vector<int> row_numbers = get_row_numbers(row);
     vector<pair<int, int>> row_positions = get_row_positions(row);
     vector<int> row_missing = get_missing_numbers(row_numbers);
 
-    // print_vector(row_numbers);
-    // print_vector(row_missing);
-    
     vector<int> hit_values;
 
     // Run a compare on all missing numbers
@@ -42,21 +39,17 @@ void row_algorithm(int row){
         }
     }
 
-    // print_vector(hit_values);
-
     /*
         -------------Column Hits----------------
     */
 
     array<vector<int>, 9> global_array_hits;
-    //array<vector<int>, 9> column_array_hits;
 
     // Note: size of vector should always be divisable by 9
     for(size_t x = 0; x < hit_values.size(); x++){
         if(hit_values[x] != 0){
             int column = (x % 9); // get column(cell) number
             int hit_value = hit_values[x]; // get the value hit
-            //column_array_hits[column].push_back(hit_value); // push value to relevant columm
             global_array_hits[column].push_back(hit_value); // push value to relevant columm
         }
     }
@@ -73,7 +66,6 @@ void row_algorithm(int row){
         int zone = get_zone(row_positions[x].first, row_positions[x].second);
         zones[x] = (zone);
     }
-
 
     // Store vectors of zone numbers in array
     array<vector<int>, 9> zone_array_numbers;
@@ -110,25 +102,6 @@ void row_algorithm(int row){
         }
     }
 
-    /*
-        -------------Debug----------------
-    */
-    // Prints the hit values
-    // std::cout << "Hit values per column global:\n\n";
-    // for(int x = 0; x < 9; x++){
-    //     print_vector(global_array_hits[x]);
-    // }
-    // print_vector_pairs(row_positions);
-    // print_vector(row_missing);
-    // for(int x = 0; x < 9; x++){
-        // print_vector(zone_array_numbers[x]);
-        // print_vector(column_array_hits[x]);
-        // print_vector(zone_array_hits[x]);
-    // }
-
-    /*
-        -------------Solve----------------
-    */
 
     solve_row(row_missing, row_positions, global_array_hits);
     
@@ -143,12 +116,10 @@ void solve_row(vector<int> &missing_numbers, vector<pair<int, int>> positions, a
     // Loop and add possibilites to grid array, should be opposite of hits vector
     for(size_t y = 0; y < missing_numbers.size(); y++){
         int compare_value = missing_numbers[y];
-        //std::cout << "compare value: " << compare_value << " \n";
         for(int x = 0; x < 9; x++){
             int count = std::count(hits[x].begin(), hits[x].end(), compare_value);
             // If its not count that means its possible for that cell - push back
             if(!count){ possible[x].push_back(compare_value); }
-            //std::cout << count << " \n";
         }
     }
 
