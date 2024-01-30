@@ -133,10 +133,6 @@ void solve_row(vector<int> &missing_numbers, vector<pair<int, int>> positions, a
         }
     }
 
-    // for(int x = 0; x < 9; x++){
-    //     print_vector(possible[x]);
-    // }
-
     std::cout << "Puzzle before: " << std::endl;
     print_puzzle();
 
