@@ -49,7 +49,7 @@ void row_algorithm(int row){
 
 
         solve_row(row_missing, row_positions, global_array_hits);
-        // solve_backtrace(row_missing);
+        // solve_backtrace();
     }
     
 }
@@ -72,54 +72,45 @@ void solve_row(vector<int> &missing_numbers, vector<pair<int, int>> &positions, 
 
 }
 
-void solve_backtrace(vector<int> _missing_numbers){
+bool solve_backtrace(){
 
-    // print_vector(_missing_numbers);
-    // int vec_size = _missing_numbers.size();
-    // vector<int> missing_numbers = _missing_numbers;
-
-    array<array<int, 9>, 9> puzzle = Sudoku::puzzle;
+    static array<array<int, 9>, 9> puzzle = Sudoku::puzzle;
 
     print_puzzle_copy(puzzle);
 
-    int iter = 0;
+    int cell = Sudoku::cell;
+    int row = Sudoku::row;
+    if(cell > 8){ cell %= 9; }
+    if(cell % 9 == 0){ ++Sudoku::row; }
+    if(row > 8){ row %= 9; }
 
-    for(int row = 0; row < 2; row++){
-            vector<int> row_numbers = get_row_numbers(row, puzzle);
-            vector<int> missing_numbers = get_missing_numbers(row_numbers);
-            int vec_size = missing_numbers.size();
-            print_vector(missing_numbers);
+    std::cout << row << cell << std::endl;
 
-        for(int cell = 0; cell < 9; cell++){
-            if(puzzle[row][cell] == 0){
-                
-                top:
-                int zone = get_zone(row, cell);
-                vector zone_numbers = get_zone_numbers(zone, puzzle);
+    int zone = get_zone(row, cell);
+    vector zone_numbers = get_zone_numbers(zone, puzzle);
 
-                int is_valid = valid_check(row, cell, missing_numbers[iter], zone_numbers, puzzle);
+    for(int num = 1; num <= 9; num++){
+        if(puzzle[row][cell] == 0){
 
-                if(is_valid == 1 && missing_numbers.size() != 0){
-                    std::cout << "cell: " << cell << " is valid: " << missing_numbers[iter] << std::endl;
-                    puzzle[row][cell] = missing_numbers[iter];
-                    int selected_num = missing_numbers.at(iter);
-                    std::remove(missing_numbers.begin(), missing_numbers.end(), selected_num);
-                    missing_numbers.pop_back();
+            int is_valid = valid_check(row, cell, num, zone_numbers, puzzle);
 
-                } else if(is_valid == 0){ 
-                    std::cout << "cell: " << cell << " not valid: " << missing_numbers[iter] << std::endl;
-                    //++iter;
-                    if(iter > vec_size){ iter = 0; }
-                    //goto top;
-                }
-
+            if(is_valid == 1 ){ 
+                puzzle[row][cell] = num; 
+            } else{
+                puzzle[row][cell] = 0;
             }
-        } endline; endline;
-    }
 
-    // std::cout << missing_numbers.at(0);
-    // print_vector(missing_numbers);
+        }
+    } endline; endline;
+
     print_puzzle_copy(puzzle);
+
+    if(!is_solved(puzzle)){
+        ++Sudoku::cell; 
+        solve_backtrace();
+     }
+
+    return true;
 
 }
 
@@ -142,14 +133,14 @@ int valid_check(int row, int column, int compare_value, vector<int> &zone_number
 }
 
 // Check if puzzle is solved, will return 1 on solve and 0 if not
-int is_solved(){
+int is_solved(array<array<int, 9>, 9> &puzzle){
 
     int solved = 0;
-    size_t puzzle_size = Sudoku::puzzle.size();
+    size_t puzzle_size = puzzle.size();
     puzzle_size *= puzzle_size;
 
     for(size_t x = 0; x < puzzle_size; x++){
-        int value = Sudoku::puzzle[0][x];
+        int value = puzzle[0][x];
         if(value == 0){
             solved = 0;
             break;

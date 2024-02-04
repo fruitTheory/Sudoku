@@ -17,7 +17,7 @@ int main(){
         row_algorithm(row_iter);
         sudoku.push_cycle();
         ++row_iter;
-        int solved = is_solved();
+        int solved = is_solved(Sudoku::puzzle);
         if(solved == 1){ running = 0; }
     }
     

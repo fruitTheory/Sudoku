@@ -1,6 +1,7 @@
 #pragma once
 
 #include "sudoku.hpp"
+#include <stdbool.h>
 
 void row_algorithm(int row);
 int cross_compare_row(int row, int compare_value, array<array<int, 9>, 9> &puzzle);
@@ -17,7 +18,7 @@ array<vector<int>, 9> convert_zone_hits(vector<int> &zone_hit_values);
 array<vector<int>, 9> combine_hit_arrays(array<vector<int>, 9> &column_hit_array, array<vector<int>, 9> &zone_hit_array);
 
 void solve_row(vector<int> &missing_numbers,  vector<pair<int, int>> &positions,  array<vector<int>, 9> &hits);
-void solve_backtrace(vector<int> missing_numbers);
-int is_solved();
+bool solve_backtrace();
+int is_solved(array<array<int, 9>, 9> &puzzle);
 
 array<vector<int>, 9> get_possible_numbers(vector<int> &missing_numbers, array<vector<int>, 9> &hits);

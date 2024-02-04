@@ -13,6 +13,8 @@ class Sudoku{
 
     public:
 
+
+        static int row, cell;
         static int backtrace;
         static int cycles;
         inline void push_cycle(){ ++cycles; };
