@@ -21,58 +21,42 @@ void row_algorithm(int row){
         -------------Row Data----------------
     */
 
-    vector<int> row_numbers = get_row_numbers(row);
-    vector<pair<int, int>> row_positions = get_row_positions(row);
+    vector<int> row_numbers = get_row_numbers(row, Sudoku::puzzle);
     vector<int> row_missing = get_missing_numbers(row_numbers);
 
-    /*
-        -------------Column Hits----------------
-    */
+    if(row_missing.size() > 0){
+        
+        vector<pair<int, int>> row_positions = get_row_positions(row);
+        
+        /*
+            -------------Column Hits----------------
+        */
 
-    vector<int> column_hit_values = column_hits_per_cell(row_missing, row_numbers, row_positions);
-    array<vector<int>, 9> column_array_hits = convert_column_hits(column_hit_values);
+        vector<int> column_hit_values = column_hits_per_cell(row_missing, row_numbers, row_positions);
+        array<vector<int>, 9> column_array_hits = convert_column_hits(column_hit_values);
 
-    /*
-        -------------Zone Hits----------------
-    */
+        /*
+            -------------Zone Hits----------------
+        */
 
-    vector<int> zone_hit_values = zone_hits_per_cell(row_positions, row_missing);
-    array<vector<int>, 9> zone_array_hits = convert_zone_hits(zone_hit_values);
+        vector<int> zone_hit_values = zone_hits_per_cell(row_positions, row_missing);
+        array<vector<int>, 9> zone_array_hits = convert_zone_hits(zone_hit_values);
 
-    /*
-        -------------Global Hits----------------
-    */
-    array<vector<int>, 9> global_array_hits = combine_hit_arrays(column_array_hits, zone_array_hits);
+        /*
+            -------------Global Hits----------------
+        */
+        array<vector<int>, 9> global_array_hits = combine_hit_arrays(column_array_hits, zone_array_hits);
 
-    solve_row(row_missing, row_positions, global_array_hits);
+
+        solve_row(row_missing, row_positions, global_array_hits);
+        // solve_backtrace(row_missing);
+    }
     
 }
 
 void solve_row(vector<int> &missing_numbers, vector<pair<int, int>> &positions, array<vector<int>, 9> &hits){
 
-    array<vector<int>, 9> possible;
-
-    int cycles = Sudoku::cycles;
-
-    // Loop and add possibilites to grid array, should be opposite of hits vector
-    for(size_t y = 0; y < missing_numbers.size(); y++){
-        int compare_value = missing_numbers[y];
-        for(int x = 0; x < 9; x++){
-            int count = std::count(hits[x].begin(), hits[x].end(), compare_value);
-            // If its not count that means its possible for that cell - push back
-            if(!count){ possible[x].push_back(compare_value); }
-        }
-    }
-
-    // Using cycles to get current row
-    if(cycles > 8){ cycles %= 9; }
-
-    // Clear cell vectors that already have a number in puzzle
-    for(int x = 0; x < 9; x++){
-        if(Sudoku::puzzle[cycles][x] != 0){
-            possible[x].clear();
-        }
-    }
+    array<vector<int>, 9> possible = get_possible_numbers(missing_numbers, hits);
 
     std::cout << "Puzzle before: " << std::endl;
     print_puzzle();
@@ -80,13 +64,80 @@ void solve_row(vector<int> &missing_numbers, vector<pair<int, int>> &positions, 
     for(int x = 0; x < 9; x++){
         if(possible[x].size() == 1){ 
             Sudoku::add_number(positions[x].first, positions[x].second, possible[x][0]); 
-            std::cout << "Cycle: " << Sudoku::cycles << std::endl;
-            // break;
         }
     }
 
     std::cout << "Puzzle after: " << std::endl;
     print_puzzle();
+
+}
+
+void solve_backtrace(vector<int> _missing_numbers){
+
+    // print_vector(_missing_numbers);
+    // int vec_size = _missing_numbers.size();
+    // vector<int> missing_numbers = _missing_numbers;
+
+    array<array<int, 9>, 9> puzzle = Sudoku::puzzle;
+
+    print_puzzle_copy(puzzle);
+
+    int iter = 0;
+
+    for(int row = 0; row < 2; row++){
+            vector<int> row_numbers = get_row_numbers(row, puzzle);
+            vector<int> missing_numbers = get_missing_numbers(row_numbers);
+            int vec_size = missing_numbers.size();
+            print_vector(missing_numbers);
+
+        for(int cell = 0; cell < 9; cell++){
+            if(puzzle[row][cell] == 0){
+                
+                top:
+                int zone = get_zone(row, cell);
+                vector zone_numbers = get_zone_numbers(zone, puzzle);
+
+                int is_valid = valid_check(row, cell, missing_numbers[iter], zone_numbers, puzzle);
+
+                if(is_valid == 1 && missing_numbers.size() != 0){
+                    std::cout << "cell: " << cell << " is valid: " << missing_numbers[iter] << std::endl;
+                    puzzle[row][cell] = missing_numbers[iter];
+                    int selected_num = missing_numbers.at(iter);
+                    std::remove(missing_numbers.begin(), missing_numbers.end(), selected_num);
+                    missing_numbers.pop_back();
+
+                } else if(is_valid == 0){ 
+                    std::cout << "cell: " << cell << " not valid: " << missing_numbers[iter] << std::endl;
+                    //++iter;
+                    if(iter > vec_size){ iter = 0; }
+                    //goto top;
+                }
+
+            }
+        } endline; endline;
+    }
+
+    // std::cout << missing_numbers.at(0);
+    // print_vector(missing_numbers);
+    print_puzzle_copy(puzzle);
+
+}
+
+int valid_check(int row, int column, int compare_value, vector<int> &zone_numbers, array<array<int, 9>, 9> &puzzle){
+
+    int is_valid = 0;
+
+    int row_check = cross_compare_row(row, compare_value, puzzle);
+    int column_check = cross_compare_columns(column, compare_value, puzzle);
+    int zone_check = cross_compare_zone(zone_numbers, compare_value);
+
+    // std::cout << row_check << column_check << zone_check << std::endl;
+
+    if(row_check == 0 && column_check == 0 && zone_check == 0){
+        is_valid = 1;
+    }
+
+    return is_valid;
 
 }
 
@@ -112,7 +163,7 @@ int is_solved(){
     return solved;
 }
 
-// Returns which missing values hit for each cell of a row - based on column hits
+// Returns which missing values are hit for each cell of a row - based on column hits
 vector<int> column_hits_per_cell(vector<int> &row_missing, vector<int> &row_numbers, vector<pair<int, int>> &row_positions){
 
     vector<int> hit_values;
@@ -121,7 +172,7 @@ vector<int> column_hits_per_cell(vector<int> &row_missing, vector<int> &row_numb
         for(int x = 0; x < 9; x++){
             if(row_numbers[x] == 0){
                 // loop through each row, passing along each missing number to compare
-                int cross_compare_value = cross_compare_columns(row_positions[x].second, row_missing[y]);
+                int cross_compare_value = cross_compare_columns(row_positions[x].second, row_missing[y], Sudoku::puzzle);
                 // std::cout << "Missing: " << row_missing[y] << std::endl;
                 hit_values.push_back(cross_compare_value);
             } else { hit_values.push_back(0); }
@@ -162,7 +213,7 @@ vector<int> zone_hits_per_cell(vector<pair<int, int>> &row_positions, vector<int
 
     // Get zone numbers related to each cells zone id and store as vector
     for(int x = 0; x < 9; x++){
-        vector<int> zone_numbers = get_zone_numbers(zones[x]);
+        vector<int> zone_numbers = get_zone_numbers(zones[x], Sudoku::puzzle);
         zone_array_numbers[x] = (zone_numbers);
     }
 
@@ -180,6 +231,7 @@ vector<int> zone_hits_per_cell(vector<pair<int, int>> &row_positions, vector<int
     return zone_hit_values;
 }
 
+// Convert zone hits into an array of vectors for each cell
 array<vector<int>, 9> convert_zone_hits(vector<int> &zone_hit_values){
 
     // Store the hits of each array into relevant column
@@ -216,10 +268,37 @@ array<vector<int>, 9> combine_hit_arrays(array<vector<int>, 9> &column_hit_array
     return global_array_hits;
 }
 
-// Call from row seek, takes a column(for current row) and compares against a compare_value, needs 1-9 iteration
-int cross_compare_columns(int column, int compare_value){
+array<vector<int>, 9> get_possible_numbers(vector<int> &missing_numbers, array<vector<int>, 9> &hits){
 
-    vector<int> column_numbers = get_column_numbers(column);
+    array<vector<int>, 9> possible;
+
+    // Loop and add possibilites to grid array, should be opposite of hits vector
+    for(size_t y = 0; y < missing_numbers.size(); y++){
+        int compare_value = missing_numbers[y];
+        for(int x = 0; x < 9; x++){
+            int count = std::count(hits[x].begin(), hits[x].end(), compare_value);
+            // If its not count that means its possible for that cell - push back
+            if(!count){ possible[x].push_back(compare_value); }
+        }
+    }
+
+    int cycles = Sudoku::cycles;
+    if(cycles > 8){ cycles %= 9; } // Using cycles to get current row
+
+    // Clear cell vectors that already have a solved number
+    for(int x = 0; x < 9; x++){
+        if(Sudoku::puzzle[cycles][x] != 0){
+            possible[x].clear();
+        }
+    }
+
+    return possible;
+}
+
+// Takes a column(from current row) and compares against a compare_value - returns 0 if value doesnt conflict
+int cross_compare_columns(int column, int compare_value, array<array<int, 9>, 9> &puzzle){
+
+    vector<int> column_numbers = get_column_numbers(column, puzzle);
     vector<pair<int, int>> column_positions = get_column_positions(column);
 
     std::sort(column_numbers.begin(), column_numbers.end());
@@ -235,7 +314,26 @@ int cross_compare_columns(int column, int compare_value){
     return column_hit;
 }
 
-// Check zone with the compare_value
+// Takes a row and compares against a compare_value - returns 0 if value doesnt conflict
+int cross_compare_row(int row, int compare_value, array<array<int, 9>, 9> &puzzle){
+
+    vector<int> row_numbers = get_row_numbers(row, puzzle);
+    vector<pair<int, int>> row_positions = get_row_positions(row);
+
+    std::sort(row_numbers.begin(), row_numbers.end());
+
+    int row_hit;
+
+    if(std::binary_search(row_numbers.begin(), row_numbers.end(), compare_value)){
+        // std::cout << "Found: " << compare_value << std::endl;
+        row_hit = compare_value;
+    } else { row_hit = 0; }
+
+
+    return row_hit;
+}
+
+// Check zone with the compare_value - returns 0 if value doesnt conflict
 int cross_compare_zone(vector<int> &zone_vector_numbers, int compare_value){
 
     // Necessary for binary search -c-, can use std::find for unsorted

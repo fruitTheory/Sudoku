@@ -51,10 +51,10 @@ vector<int> puzzle_to_vector(){
 }
 
 // Gets numbers in a row and return a vector, rows start at 0
-vector<int> get_row_numbers(int row){
+vector<int> get_row_numbers(int row, array<array<int, 9>, 9> &puzzle){
     std::vector<int> row_numbers;
     for(int x = 0; x < 9; x++){
-        row_numbers.push_back(Sudoku::puzzle[row][x]);
+        row_numbers.push_back(puzzle[row][x]);
     }
     return row_numbers;
 }
@@ -71,10 +71,10 @@ vector<pair<int, int>> get_row_positions(int row){
 }
 
 // Gets numbers in a column and return a vector, columns start at 0
-vector<int> get_column_numbers(int column){
+vector<int> get_column_numbers(int column, array<array<int, 9>, 9> &puzzle){
     vector<int> column_numbers;
     for(int x = 0; x < 9; x++){
-        column_numbers.push_back(Sudoku::puzzle[x][column]);
+        column_numbers.push_back(puzzle[x][column]);
     }
     return column_numbers;
 }

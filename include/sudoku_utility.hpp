@@ -11,6 +11,7 @@ void print_puzzle_column(int column);
 
 // Prints whole puzzle in a grid pattern
 void print_puzzle();
+void print_puzzle_copy(std::array<std::array<int, 9>, 9> puzzle);
 
 // Prints any vector/array supplied
 template<typename T>
