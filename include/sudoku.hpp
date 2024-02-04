@@ -20,6 +20,7 @@ class Sudoku{
         inline void push_cycle(){ ++cycles; };
 
         static array<array<int, 9>, 9> puzzle;
+        static int total_size;
 
         static inline void add_number(int y, int x, int number){
             Sudoku::puzzle[y][x] = number;

@@ -47,9 +47,11 @@ void row_algorithm(int row){
         */
         array<vector<int>, 9> global_array_hits = combine_hit_arrays(column_array_hits, zone_array_hits);
 
+        if(Sudoku::backtrace == 0)
+            solve_row(row_missing, row_positions, global_array_hits);
 
-        solve_row(row_missing, row_positions, global_array_hits);
-        // solve_backtrace();
+        if(Sudoku::backtrace == 1)
+            solve_backtrace();
     }
     
 }
@@ -70,6 +72,31 @@ void solve_row(vector<int> &missing_numbers, vector<pair<int, int>> &positions, 
     std::cout << "Puzzle after: " << std::endl;
     print_puzzle();
 
+    int total = get_puzzle_total(Sudoku::puzzle);
+
+    // If the puzzle is same size as previous cycles(9) then use backtrace
+    if(Sudoku::cycles % 9 == 0){
+        
+        if(Sudoku::total_size == total){
+            std::cout << "Row Algorithm Failed: " << std::endl;
+            Sudoku::backtrace = 1;
+        }
+
+        Sudoku::total_size = total;
+    }
+
+
+}
+
+int get_puzzle_total(array<array<int, 9>, 9> puzzle){
+    int total = 0;
+    for( array arr : puzzle){
+        for ( int num : arr){
+            total += num;
+        }
+    }
+
+    return total;
 }
 
 bool solve_backtrace(){
@@ -101,11 +128,28 @@ bool solve_backtrace(){
             }
 
         }
-    } endline; endline;
+    } endline;
 
     print_puzzle_copy(puzzle);
 
     if(!is_solved(puzzle)){
+        
+        int total = get_puzzle_total(puzzle);
+
+        // std::cout << "Row: " << Sudoku::row << std::endl;
+        // std::cout << "Total: " << total << std::endl;
+
+        // If stuck in loop terminate program
+        if(Sudoku::row % 10 == 0 && Sudoku::total_size == total){
+            std::cout << "Backtrace Algorithm Failed: " << std::endl;
+            exit(1);
+        }
+
+        // Only store on cycles
+        if(Sudoku::row % 10 == 0){
+            Sudoku::total_size = total;
+        }
+        
         ++Sudoku::cell; 
         solve_backtrace();
      }
