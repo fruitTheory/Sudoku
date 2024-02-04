@@ -47,10 +47,10 @@ void row_algorithm(int row){
         */
         array<vector<int>, 9> global_array_hits = combine_hit_arrays(column_array_hits, zone_array_hits);
 
-        if(Sudoku::backtrace == 0)
+        if(!Sudoku::backtrace)
             solve_row(row_missing, row_positions, global_array_hits);
 
-        if(Sudoku::backtrace == 1)
+        if(Sudoku::backtrace)
             solve_backtrace();
     }
     
@@ -78,7 +78,7 @@ void solve_row(vector<int> &missing_numbers, vector<pair<int, int>> &positions, 
     if(Sudoku::cycles % 9 == 0){
         
         if(Sudoku::total_size == total){
-            std::cout << "Row Algorithm Failed: " << std::endl;
+            std::cerr << "Row Algorithm Failed: " << std::endl;
             Sudoku::backtrace = 1;
         }
 
@@ -86,17 +86,6 @@ void solve_row(vector<int> &missing_numbers, vector<pair<int, int>> &positions, 
     }
 
 
-}
-
-int get_puzzle_total(array<array<int, 9>, 9> puzzle){
-    int total = 0;
-    for( array arr : puzzle){
-        for ( int num : arr){
-            total += num;
-        }
-    }
-
-    return total;
 }
 
 bool solve_backtrace(){
@@ -107,14 +96,21 @@ bool solve_backtrace(){
 
     int cell = Sudoku::cell;
     int row = Sudoku::row;
+
+
+
+    // Series of ifs to keep cell and row in bounds
     if(cell > 8){ cell %= 9; }
-    if(cell % 9 == 0){ ++Sudoku::row; }
+    if(cell % 9 == 0 && Sudoku::cell > 8){ ++Sudoku::row; }
     if(row > 8){ row %= 9; }
 
-    std::cout << row << cell << std::endl;
-
+    // Set information needed for zone
     int zone = get_zone(row, cell);
     vector zone_numbers = get_zone_numbers(zone, puzzle);
+
+    std::cout << "Row: " << Sudoku::row << std::endl;
+    std::cout << "Cell: " << Sudoku::cell << std::endl;
+
 
     for(int num = 1; num <= 9; num++){
         if(puzzle[row][cell] == 0){
@@ -123,8 +119,13 @@ bool solve_backtrace(){
 
             if(is_valid == 1 ){ 
                 puzzle[row][cell] = num; 
-            } else{
-                puzzle[row][cell] = 0;
+            }
+            else if(is_valid != 1 && num == 9)
+            {
+                // puzzle[row][cell] = 0;
+                std::cout << "Backtrack time: " << std::endl;
+                // print_puzzle_copy(puzzle);
+                // exit(0);
             }
 
         }
@@ -132,24 +133,27 @@ bool solve_backtrace(){
 
     print_puzzle_copy(puzzle);
 
+    if(Sudoku::cell == 17){ exit(0); }
+    // std::cout << "Next: " << std::endl;
+
+
     if(!is_solved(puzzle)){
         
         int total = get_puzzle_total(puzzle);
 
-        // std::cout << "Row: " << Sudoku::row << std::endl;
-        // std::cout << "Total: " << total << std::endl;
-
         // If stuck in loop terminate program
-        if(Sudoku::row % 10 == 0 && Sudoku::total_size == total){
-            std::cout << "Backtrace Algorithm Failed: " << std::endl;
-            exit(1);
+        if(Sudoku::row > 8 && Sudoku::row % 9 == 0 && Sudoku::total_size == total){
+            std::cerr << "Backtrace Algorithm Failed: at " << 
+            Sudoku::cycles << " cycles" << std::endl; endline;
+            exit(0);
         }
 
         // Only store on cycles
-        if(Sudoku::row % 10 == 0){
+        if(Sudoku::row > 8 && Sudoku::row % 9 == 0){
             Sudoku::total_size = total;
         }
         
+        ++Sudoku::cycles;
         ++Sudoku::cell; 
         solve_backtrace();
      }
@@ -196,6 +200,17 @@ int is_solved(array<array<int, 9>, 9> &puzzle){
     }
 
     return solved;
+}
+
+int get_puzzle_total(array<array<int, 9>, 9> puzzle){
+    int total = 0;
+    for( array arr : puzzle){
+        for ( int num : arr){
+            total += num;
+        }
+    }
+
+    return total;
 }
 
 // Returns which missing values are hit for each cell of a row - based on column hits
