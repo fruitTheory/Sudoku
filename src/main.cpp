@@ -10,15 +10,15 @@ int main(){
     Sudoku sudoku;
 
     int row_iter = 0;
-    int running = 1;
+    bool running = true;
 
 
     while(running){
         row_algorithm(row_iter);
         sudoku.push_cycle();
         ++row_iter;
-        int solved = is_solved(Sudoku::puzzle);
-        if(solved == 1){ running = 0; }
+        bool solved = is_solved(Sudoku::puzzle);
+        if(solved){ running = false; }
     }
     
     return EXIT_SUCCESS;

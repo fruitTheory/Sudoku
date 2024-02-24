@@ -50,8 +50,10 @@ void row_algorithm(int row){
         if(!Sudoku::backtrace)
             solve_row(row_missing, row_positions, global_array_hits);
 
-        if(Sudoku::backtrace)
-            solve_backtrace();
+        if(Sudoku::backtrace){
+            array<vector<int>, 81> _tried;
+            solve_backtrace(0, 0, _tried);
+        }
     }
     
 }
@@ -88,52 +90,113 @@ void solve_row(vector<int> &missing_numbers, vector<pair<int, int>> &positions, 
 
 }
 
-bool solve_backtrace(){
+// Compares value to vector returns true if exists in vector
+bool compare_value_vec(vector<int> vec, int compare_value){
+    for(auto num : vec){
+        if(num == compare_value){
+            return true;
+        }
+    }
+    return false;
+}
+
+// Compares value to vector returns true if exists in vector
+bool compare_value_vec_pair(vector<pair<int, int>> vec_pair, pair<int, int> compare_value){
+    for(auto num : vec_pair){
+        if(num == compare_value){
+            return true;
+        }
+    }
+    return false;
+}
+
+bool solve_backtrace(int row, int cell, array<vector<int>, 81> _tried){
 
     static array<array<int, 9>, 9> puzzle = Sudoku::puzzle;
 
     print_puzzle_copy(puzzle);
 
-    int cell = Sudoku::cell;
-    int row = Sudoku::row;
+    // int cell = Sudoku::cell;
+    // int row = Sudoku::row;
 
-
+    std::cout << "Row: " << row << std::endl;
+    std::cout << "Cell: " << cell << std::endl;
 
     // Series of ifs to keep cell and row in bounds
     if(cell > 8){ cell %= 9; }
-    if(cell % 9 == 0 && Sudoku::cell > 8){ ++Sudoku::row; }
+    if(cell % 9 == 0 && cell > 8){ ++row; }
     if(row > 8){ row %= 9; }
 
     // Set information needed for zone
     int zone = get_zone(row, cell);
     vector zone_numbers = get_zone_numbers(zone, puzzle);
 
-    std::cout << "Row: " << Sudoku::row << std::endl;
-    std::cout << "Cell: " << Sudoku::cell << std::endl;
+    static vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    array<vector<int>, 81> tried = _tried;
+    pair<int, int> previous_pair;
 
+    repeat:
 
-    for(int num = 1; num <= 9; num++){
+    #define iteration (Sudoku::cell)
+
+    for(int num : numbers){
         if(puzzle[row][cell] == 0){
-
-            int is_valid = valid_check(row, cell, num, zone_numbers, puzzle);
-
-            if(is_valid == 1 ){ 
-                puzzle[row][cell] = num; 
+            
+            // Pair setup - save positions
+            int pair_exists = compare_value_vec_pair(Sudoku::current_cell, {row, cell});
+            if(!pair_exists){
+                Sudoku::current_cell.push_back({row, cell});
             }
-            else if(is_valid != 1 && num == 9)
+
+            // Check if value valid, check if already tried value
+            bool is_valid = valid_check(row, cell, num, zone_numbers, puzzle);
+            bool already_tried = compare_value_vec(tried[iteration], num);
+
+            // If tried values not already maxed out push back the number
+            if(!(already_tried) && tried[iteration].size() < 9){
+                tried[iteration].push_back(num);
+            }
+
+            // If number is valid and not already tried, add to position
+            if(is_valid && !already_tried){ 
+                puzzle[row][cell] = num;
+                print_vector(tried[iteration]);
+                // ++cell;
+            }
+
+            // If number is still not valid and at end possible numbers array
+            else if(!(is_valid) && num == numbers.back())
             {
-                // puzzle[row][cell] = 0;
                 std::cout << "Backtrack time: " << std::endl;
-                // print_puzzle_copy(puzzle);
+                std::cout << "Row: " << row << std::endl;
+                std::cout << "Cell: " << cell << std::endl;
+
+
+                auto end = Sudoku::current_cell.end();
+                auto previous_pair = *----end;
+
+                print_vector_pairs(Sudoku::current_cell);
+
+                // std::cout << "previous row: " << previous_pair.first << std::endl;
+                // std::cout << "previous cell: " << previous_pair.second << std::endl;
+
+                puzzle[previous_pair.first][previous_pair.second] = 0;
+
+                print_puzzle_copy(puzzle);
+                print_vector(tried[iteration]);
+                // goto repeat;
                 // exit(0);
+                // if(Sudoku::cell == 19){ exit(0); }
+                // solve_backtrace(previous_pair.first, previous_pair.second, tried);
             }
 
         }
     } endline;
 
-    print_puzzle_copy(puzzle);
+    // ++Sudoku::fail;
+    // print_puzzle_copy(puzzle);
 
-    if(Sudoku::cell == 17){ exit(0); }
+    if(Sudoku::cell == 3){ exit(0); }
     // std::cout << "Next: " << std::endl;
 
 
@@ -142,29 +205,31 @@ bool solve_backtrace(){
         int total = get_puzzle_total(puzzle);
 
         // If stuck in loop terminate program
-        if(Sudoku::row > 8 && Sudoku::row % 9 == 0 && Sudoku::total_size == total){
-            std::cerr << "Backtrace Algorithm Failed: at " << 
+        if(Sudoku::cell > 8 && Sudoku::cell % 9 == 0 && Sudoku::total_size == total){
+            std::cerr << "Backtrace Algorithm Failed: at " <<
             Sudoku::cycles << " cycles" << std::endl; endline;
             exit(0);
         }
 
         // Only store on cycles
-        if(Sudoku::row > 8 && Sudoku::row % 9 == 0){
+        if(Sudoku::cell > 8 && Sudoku::cell % 9 == 0){
             Sudoku::total_size = total;
         }
-        
+
+        std::cout << Sudoku::cycles << " cycles" << std::endl;
         ++Sudoku::cycles;
-        ++Sudoku::cell; 
-        solve_backtrace();
+        ++Sudoku::cell;
+        ++cell;
+        solve_backtrace(row, cell, tried);
      }
 
     return true;
 
 }
 
-int valid_check(int row, int column, int compare_value, vector<int> &zone_numbers, array<array<int, 9>, 9> &puzzle){
+bool valid_check(int row, int column, int compare_value, vector<int> &zone_numbers, array<array<int, 9>, 9> &puzzle){
 
-    int is_valid = 0;
+    int is_valid = false;
 
     int row_check = cross_compare_row(row, compare_value, puzzle);
     int column_check = cross_compare_columns(column, compare_value, puzzle);
@@ -173,7 +238,7 @@ int valid_check(int row, int column, int compare_value, vector<int> &zone_number
     // std::cout << row_check << column_check << zone_check << std::endl;
 
     if(row_check == 0 && column_check == 0 && zone_check == 0){
-        is_valid = 1;
+        is_valid = true;
     }
 
     return is_valid;
@@ -181,9 +246,9 @@ int valid_check(int row, int column, int compare_value, vector<int> &zone_number
 }
 
 // Check if puzzle is solved, will return 1 on solve and 0 if not
-int is_solved(array<array<int, 9>, 9> &puzzle){
+bool is_solved(array<array<int, 9>, 9> &puzzle){
 
-    int solved = 0;
+    int solved = false;
     size_t puzzle_size = puzzle.size();
     puzzle_size *= puzzle_size;
 
@@ -192,7 +257,7 @@ int is_solved(array<array<int, 9>, 9> &puzzle){
         if(value == 0){
             solved = 0;
             break;
-        } else { solved = 1; }
+        } else { solved = true; }
     }
 
     if(solved){

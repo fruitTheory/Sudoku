@@ -13,7 +13,8 @@ class Sudoku{
 
     public:
 
-
+        static vector<pair<int, int>> current_cell;
+        static int fail;
         static int row, cell;
         static int backtrace;
         static int cycles;

@@ -15,6 +15,7 @@ int Sudoku::cell = 0;
 int Sudoku::row = 0;
 int Sudoku::total_size = 0;
 int Sudoku::backtrace = 0;
+vector<pair<int, int>> Sudoku::current_cell;
 
 // // Easy puzzle
 // array<array<int, 9>, 9> Sudoku::puzzle = {{
