@@ -12,7 +12,6 @@ int main(){
     int row_iter = 0;
     bool running = true;
 
-
     while(running){
         row_algorithm(row_iter);
         sudoku.push_cycle();
