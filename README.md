@@ -1,13 +1,9 @@
 # Sudoku
 
-A Sudoku puzzle solver. Designed with a custom solver. May implement backtrace for harder puzzles. 
-
-Features
-- Custom algorithm
-- Can complete easy to hard puzzles  
+A Sudoku puzzle solver. Designed with a custom solver that can complete easy to hard problems.
 
 Future
-- Implement stronger algorithm
+- Implement a stronger algorithm
 - Make a visual board
 - Take puzzle input  
 
