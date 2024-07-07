@@ -16,10 +16,17 @@ int main(){
         row_algorithm(row_iter);
         sudoku.push_cycle();
         ++row_iter;
-        bool solved = is_solved(Sudoku::puzzle);
-        if(solved){ running = false; }
+        bool solved = is_solved();
+        if(solved){ print_puzzle(); running = false; }
+        if(Sudoku::backtrace){ running = false; }
     }
     
+    if(Sudoku::backtrace){
+        std::cout << "\n\n"
+        << "Backtrace Algorithm: \n";
+        solve_backtrace();
+    }
+
     return EXIT_SUCCESS;
 
 }

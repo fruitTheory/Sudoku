@@ -21,7 +21,7 @@ void row_algorithm(int row){
         -------------Row Data----------------
     */
 
-    vector<int> row_numbers = get_row_numbers(row, Sudoku::puzzle);
+    vector<int> row_numbers = get_row_numbers(row);
     vector<int> row_missing = get_missing_numbers(row_numbers);
 
     if(row_missing.size() > 0){
@@ -47,12 +47,8 @@ void row_algorithm(int row){
         */
         array<vector<int>, 9> global_array_hits = combine_hit_arrays(column_array_hits, zone_array_hits);
 
-        if(!Sudoku::backtrace)
-            solve_row(row_missing, row_positions, global_array_hits);
+        solve_row(row_missing, row_positions, global_array_hits);
 
-        if(Sudoku::backtrace){
-            solve_backtrace();
-        }
     }
     
 }
@@ -61,8 +57,8 @@ void solve_row(vector<int> &missing_numbers, vector<pair<int, int>> &positions, 
 
     array<vector<int>, 9> possible = get_possible_numbers(missing_numbers, hits);
 
-    std::cout << "Puzzle before: " << std::endl;
-    print_puzzle();
+    // std::cout << "Puzzle before: " << std::endl;
+    // print_puzzle();
 
     for(int x = 0; x < 9; x++){
         if(possible[x].size() == 1){ 
@@ -70,10 +66,10 @@ void solve_row(vector<int> &missing_numbers, vector<pair<int, int>> &positions, 
         }
     }
 
-    std::cout << "Puzzle after: " << std::endl;
-    print_puzzle();
+    // std::cout << "Puzzle after: " << std::endl;
+    // print_puzzle();
 
-    int total = get_puzzle_total(Sudoku::puzzle);
+    int total = get_puzzle_total();
 
     // If the puzzle is same size as previous cycles(9) then use backtrace
     if(Sudoku::cycles % 9 == 0){
@@ -85,8 +81,6 @@ void solve_row(vector<int> &missing_numbers, vector<pair<int, int>> &positions, 
 
         Sudoku::total_size = total;
     }
-
-
 }
 
 // Compares value to vector returns true if exists in vector
@@ -109,17 +103,57 @@ bool compare_value_vec_pair(vector<pair<int, int>> vec_pair, pair<int, int> comp
     return false;
 }
 
-void solve_backtrace(){
-    std::cout << "Bactrace not implemented." << std::endl;
-    std::abort();
+pair<int, int> find_empty(){
+
+    pair<int, int> coords;
+    int y{0}; int x{0};
+
+    for(auto row: Sudoku::puzzle){
+        for(int value: row){  
+            if(Sudoku::puzzle[y][x] == 0){
+                coords.first = y; coords.second = x;
+                goto abort;
+            }
+            x = (x+1) % 9;
+        } y++;
+    }
+
+    abort:
+    return coords;
 }
 
-bool valid_check(int row, int column, int compare_value, vector<int> &zone_numbers, array<array<int, 9>, 9> &puzzle){
+bool solve_backtrace(){
+    Sudoku::cycles++;
+    vector<int> possible = {1,2,3,4,5,6,7,8,9};
+    pair<int, int> coords = find_empty();
+
+    if(is_solved()){
+        print_puzzle();
+        return true;
+    }
+
+    for(int number: possible){
+        int zone = get_zone(coords.first, coords.second);
+
+        if(valid_check(coords.first, coords.second, number, zone)){
+            Sudoku::puzzle[coords.first][coords.second] = number;
+            if(solve_backtrace()){
+                return true;
+            }
+            Sudoku::puzzle[coords.first][coords.second] = 0;
+        }
+    }
+
+    return false;
+}
+
+bool valid_check(int row, int column, int compare_value, int zone){
 
     int is_valid = false;
+    vector<int> zone_numbers = get_zone_numbers(zone);
 
-    int row_check = cross_compare_row(row, compare_value, puzzle);
-    int column_check = cross_compare_columns(column, compare_value, puzzle);
+    int row_check = cross_compare_row(row, compare_value);
+    int column_check = cross_compare_columns(column, compare_value);
     int zone_check = cross_compare_zone(zone_numbers, compare_value);
 
     // std::cout << row_check << column_check << zone_check << std::endl;
@@ -133,14 +167,14 @@ bool valid_check(int row, int column, int compare_value, vector<int> &zone_numbe
 }
 
 // Check if puzzle is solved, will return 1 on solve and 0 if not
-bool is_solved(array<array<int, 9>, 9> &puzzle){
+bool is_solved(){
 
     int solved = false;
-    size_t puzzle_size = puzzle.size();
+    size_t puzzle_size = Sudoku::puzzle.size();
     puzzle_size *= puzzle_size;
 
     for(size_t x = 0; x < puzzle_size; x++){
-        int value = puzzle[0][x];
+        int value = Sudoku::puzzle[0][x];
         if(value == 0){
             solved = 0;
             break;
@@ -154,9 +188,9 @@ bool is_solved(array<array<int, 9>, 9> &puzzle){
     return solved;
 }
 
-int get_puzzle_total(array<array<int, 9>, 9> puzzle){
+int get_puzzle_total(){
     int total = 0;
-    for( array arr : puzzle){
+    for( array arr : Sudoku::puzzle){
         for ( int num : arr){
             total += num;
         }
@@ -174,7 +208,7 @@ vector<int> column_hits_per_cell(vector<int> &row_missing, vector<int> &row_numb
         for(int x = 0; x < 9; x++){
             if(row_numbers[x] == 0){
                 // loop through each row, passing along each missing number to compare
-                int cross_compare_value = cross_compare_columns(row_positions[x].second, row_missing[y], Sudoku::puzzle);
+                int cross_compare_value = cross_compare_columns(row_positions[x].second, row_missing[y]);
                 // std::cout << "Missing: " << row_missing[y] << std::endl;
                 hit_values.push_back(cross_compare_value);
             } else { hit_values.push_back(0); }
@@ -215,7 +249,7 @@ vector<int> zone_hits_per_cell(vector<pair<int, int>> &row_positions, vector<int
 
     // Get zone numbers related to each cells zone id and store as vector
     for(int x = 0; x < 9; x++){
-        vector<int> zone_numbers = get_zone_numbers(zones[x], Sudoku::puzzle);
+        vector<int> zone_numbers = get_zone_numbers(zones[x]);
         zone_array_numbers[x] = (zone_numbers);
     }
 
@@ -298,9 +332,9 @@ array<vector<int>, 9> get_possible_numbers(vector<int> &missing_numbers, array<v
 }
 
 // Takes a column(from current row) and compares against a compare_value - returns 0 if value doesnt conflict
-int cross_compare_columns(int column, int compare_value, array<array<int, 9>, 9> &puzzle){
+int cross_compare_columns(int column, int compare_value){
 
-    vector<int> column_numbers = get_column_numbers(column, puzzle);
+    vector<int> column_numbers = get_column_numbers(column);
     vector<pair<int, int>> column_positions = get_column_positions(column);
 
     std::sort(column_numbers.begin(), column_numbers.end());
@@ -317,9 +351,9 @@ int cross_compare_columns(int column, int compare_value, array<array<int, 9>, 9>
 }
 
 // Takes a row and compares against a compare_value - returns 0 if value doesnt conflict
-int cross_compare_row(int row, int compare_value, array<array<int, 9>, 9> &puzzle){
+int cross_compare_row(int row, int compare_value){
 
-    vector<int> row_numbers = get_row_numbers(row, puzzle);
+    vector<int> row_numbers = get_row_numbers(row);
     vector<pair<int, int>> row_positions = get_row_positions(row);
 
     std::sort(row_numbers.begin(), row_numbers.end());

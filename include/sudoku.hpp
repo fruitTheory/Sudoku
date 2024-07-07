@@ -38,13 +38,13 @@ struct Grid{
 vector<int> puzzle_to_vector();
 
 // Gets numbers in a row and return a vector, rows start at 0
-vector<int> get_row_numbers(int row, array<array<int, 9>, 9> &puzzle);
+vector<int> get_row_numbers(int row);
 
 // Gets row positions and return a vector, rows start at 0
 vector<pair<int, int>> get_row_positions(int row);
 
 // Gets numbers in a column and return a vector, columns start at 0
-vector<int> get_column_numbers(int column, array<array<int, 9>, 9> &puzzle);
+vector<int> get_column_numbers(int column);
 
 // Gets column positions and return a vector, columns start at 0
 vector<pair<int, int>> get_column_positions(int column);

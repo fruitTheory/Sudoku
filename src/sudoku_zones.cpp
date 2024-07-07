@@ -27,7 +27,7 @@ int get_zone(int position_y, int position_x){
 }
 
 // Takes zone and returns a vector of current zone numbers
-std::vector<int> get_zone_numbers(int zone, array<array<int, 9>, 9> &puzzle){
+std::vector<int> get_zone_numbers(int zone){
 
     std::vector<int> zone_numbers;
 
@@ -37,7 +37,7 @@ std::vector<int> get_zone_numbers(int zone, array<array<int, 9>, 9> &puzzle){
         case 0:{
             for(int y = 0; y < 3; y++){
                 for(int x = 0; x < 3; x++){
-                    zone_numbers.push_back(puzzle[y][x]);
+                    zone_numbers.push_back(Sudoku::puzzle[y][x]);
                 }
             }
             break;
@@ -45,7 +45,7 @@ std::vector<int> get_zone_numbers(int zone, array<array<int, 9>, 9> &puzzle){
         case 1:{
             for(int y = 0; y < 3; y++){
                 for(int x = 3; x < 6; x++){
-                    zone_numbers.push_back(puzzle[y][x]);
+                    zone_numbers.push_back(Sudoku::puzzle[y][x]);
                 }
             }
             break;
@@ -53,7 +53,7 @@ std::vector<int> get_zone_numbers(int zone, array<array<int, 9>, 9> &puzzle){
         case 2:{
             for(int y = 0; y < 3; y++){
                 for(int x = 6; x < 9; x++){
-                    zone_numbers.push_back(puzzle[y][x]);
+                    zone_numbers.push_back(Sudoku::puzzle[y][x]);
                 }
             }
             break;
@@ -63,7 +63,7 @@ std::vector<int> get_zone_numbers(int zone, array<array<int, 9>, 9> &puzzle){
         case 3:{
             for(int y = 3; y < 6; y++){
                 for(int x = 0; x < 3; x++){
-                    zone_numbers.push_back(puzzle[y][x]);
+                    zone_numbers.push_back(Sudoku::puzzle[y][x]);
                 }
             }
             break;
@@ -71,7 +71,7 @@ std::vector<int> get_zone_numbers(int zone, array<array<int, 9>, 9> &puzzle){
         case 4:{
             for(int y = 3; y < 6; y++){
                 for(int x = 3; x < 6; x++){
-                    zone_numbers.push_back(puzzle[y][x]);
+                    zone_numbers.push_back(Sudoku::puzzle[y][x]);
                 }
             }
             break;
@@ -79,7 +79,7 @@ std::vector<int> get_zone_numbers(int zone, array<array<int, 9>, 9> &puzzle){
         case 5:{
             for(int y = 3; y < 6; y++){
                 for(int x = 6; x < 9; x++){
-                    zone_numbers.push_back(puzzle[y][x]);
+                    zone_numbers.push_back(Sudoku::puzzle[y][x]);
                 }
             }
             break;
@@ -89,7 +89,7 @@ std::vector<int> get_zone_numbers(int zone, array<array<int, 9>, 9> &puzzle){
         case 6:{
             for(int y = 6; y < 9; y++){
                 for(int x = 0; x < 3; x++){
-                    zone_numbers.push_back(puzzle[y][x]);
+                    zone_numbers.push_back(Sudoku::puzzle[y][x]);
                 }
             }
             break;
@@ -97,7 +97,7 @@ std::vector<int> get_zone_numbers(int zone, array<array<int, 9>, 9> &puzzle){
         case 7:{
             for(int y = 6; y < 9; y++){
                 for(int x = 3; x < 6; x++){
-                    zone_numbers.push_back(puzzle[y][x]);
+                    zone_numbers.push_back(Sudoku::puzzle[y][x]);
                 }
             }
             break;
@@ -105,7 +105,7 @@ std::vector<int> get_zone_numbers(int zone, array<array<int, 9>, 9> &puzzle){
         case 8:{
             for(int y = 6; y < 9; y++){
                 for(int x = 6; x < 9; x++){
-                    zone_numbers.push_back(puzzle[y][x]);
+                    zone_numbers.push_back(Sudoku::puzzle[y][x]);
                 }
             }
             break;

@@ -17,7 +17,33 @@ int Sudoku::total_size = 0;
 int Sudoku::backtrace = 0;
 vector<pair<int, int>> Sudoku::current_cell;
 
-// // Easy puzzle
+// Expert Puzzle
+array<array<int, 9>, 9> Sudoku::puzzle = {{
+{ 0, 0, 0, 0, 0, 0, 4, 0, 0, },
+{ 3, 0, 6, 0, 0, 0, 0, 0, 0, },
+{ 0, 0, 0, 1, 9, 6, 0, 3, 0, },
+{ 0, 7, 0, 0, 0, 0, 0, 1, 0, },
+{ 8, 0, 0, 2, 5, 0, 0, 9, 0, },
+{ 0, 4, 0, 0, 0, 0, 8, 0, 0, },
+{ 0, 6, 0, 4, 0, 9, 0, 0, 8, },
+{ 0, 0, 5, 0, 0, 0, 0, 2, 0, },
+{ 0, 0, 0, 5, 0, 0, 0, 0, 7, },
+}};
+
+// // Hard Puzzle
+// array<array<int, 9>, 9> Sudoku::puzzle = {{
+// { 5, 3, 0, 0, 7, 0, 0, 0, 0, },
+// { 6, 0, 0, 1, 9, 5, 0, 0, 0, },
+// { 0, 9, 8, 0, 0, 0, 0, 6, 0, },
+// { 8, 0, 0, 0, 6, 0, 0, 0, 3, },
+// { 4, 0, 0, 8, 0, 3, 0, 0, 1, },
+// { 7, 0, 0, 0, 2, 0, 0, 0, 6, },
+// { 0, 6, 0, 0, 0, 0, 2, 8, 0, },
+// { 0, 0, 0, 4, 1, 9, 0, 0, 5, },
+// { 0, 0, 0, 0, 8, 0, 0, 7, 9, },
+// }};
+
+// // Medium puzzle
 // array<array<int, 9>, 9> Sudoku::puzzle = {{
 //     { 0, 2, 0, 3, 4, 5, 0, 0, 7, },
 //     { 0, 5, 0, 0, 0, 6, 3, 0, 0, },
@@ -30,30 +56,17 @@ vector<pair<int, int>> Sudoku::current_cell;
 //     { 0, 6, 0, 0, 0, 0, 4, 0, 2, },
 // }};
 
-// Hard puzzle
-array<array<int, 9>, 9> Sudoku::puzzle = {{
-{ 9, 0, 4, 6, 7, 0, 3, 0, 1, },
-{ 2, 5, 7, 8, 0, 0, 0, 6, 0, },
-{ 6, 0, 0, 5, 0, 9, 0, 0, 0, },
-{ 0, 7, 0, 0, 1, 0, 0, 9, 2, },
-{ 0, 0, 0, 0, 0, 8, 0, 0, 0, },
-{ 4, 2, 9, 7, 0, 0, 0, 1, 0, },
-{ 0, 3, 2, 0, 5, 0, 9, 4, 0, },
-{ 1, 9, 0, 0, 0, 0, 5, 7, 3, },
-{ 7, 4, 0, 0, 0, 6, 0, 2, 0, },
-}};
-
-// // Expert
+// // Easy puzzle
 // array<array<int, 9>, 9> Sudoku::puzzle = {{
-// { 0, 0, 0, 0, 0, 0, 4, 0, 0, },
-// { 3, 0, 6, 0, 0, 0, 0, 0, 0, },
-// { 0, 0, 0, 1, 9, 6, 0, 3, 0, },
-// { 0, 7, 0, 0, 0, 0, 0, 1, 0, },
-// { 8, 0, 0, 2, 5, 0, 0, 9, 0, },
-// { 0, 4, 0, 0, 0, 0, 8, 0, 0, },
-// { 0, 6, 0, 4, 0, 9, 0, 0, 8, },
-// { 0, 0, 5, 0, 0, 0, 0, 2, 0, },
-// { 0, 0, 0, 5, 0, 0, 0, 0, 7, },
+// { 9, 0, 4, 6, 7, 0, 3, 0, 1, },
+// { 2, 5, 7, 8, 0, 0, 0, 6, 0, },
+// { 6, 0, 0, 5, 0, 9, 0, 0, 0, },
+// { 0, 7, 0, 0, 1, 0, 0, 9, 2, },
+// { 0, 0, 0, 0, 0, 8, 0, 0, 0, },
+// { 4, 2, 9, 7, 0, 0, 0, 1, 0, },
+// { 0, 3, 2, 0, 5, 0, 9, 4, 0, },
+// { 1, 9, 0, 0, 0, 0, 5, 7, 3, },
+// { 7, 4, 0, 0, 0, 6, 0, 2, 0, },
 // }};
 
 // Store current puzzle into a vector
@@ -68,10 +81,10 @@ vector<int> puzzle_to_vector(){
 }
 
 // Gets numbers in a row and return a vector, rows start at 0
-vector<int> get_row_numbers(int row, array<array<int, 9>, 9> &puzzle){
+vector<int> get_row_numbers(int row){
     std::vector<int> row_numbers;
     for(int x = 0; x < 9; x++){
-        row_numbers.push_back(puzzle[row][x]);
+        row_numbers.push_back(Sudoku::puzzle[row][x]);
     }
     return row_numbers;
 }
@@ -88,10 +101,10 @@ vector<pair<int, int>> get_row_positions(int row){
 }
 
 // Gets numbers in a column and return a vector, columns start at 0
-vector<int> get_column_numbers(int column, array<array<int, 9>, 9> &puzzle){
+vector<int> get_column_numbers(int column){
     vector<int> column_numbers;
     for(int x = 0; x < 9; x++){
-        column_numbers.push_back(puzzle[x][column]);
+        column_numbers.push_back(Sudoku::puzzle[x][column]);
     }
     return column_numbers;
 }
